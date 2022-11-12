@@ -1,0 +1,23 @@
+                                                    [MAIN FUNCTIONS] - They go on a single line
+
+[SetSpeakerPlayer] true
+//Sets the player as the active speaker
+
+[SetSpeakerPlayer] false
+//Sets the NPC as the active speaker
+
+[SwapSpeaker]
+//Swaps the active speaker
+
+[PlaySound] int soundIndex
+//Plays a sound effect from the Dialogue actors list of sounds
+
+[PlayAnimation] string animationName
+//Plays an animation on the dialogue actors Animator using the crossfade function
+
+
+
+
+
+
+                                                    [In-Line FUNCTIONS] - They go in between text

@@ -1,5 +1,5 @@
 {
-    "name": "Input Asset",
+    "name": "Player Controls",
     "maps": [
         {
             "name": "Player",
@@ -24,9 +24,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Jump",
+                    "name": "Interact",
                     "type": "Button",
-                    "id": "87d2a2db-4d6e-4269-9362-85589e0cc38a",
+                    "id": "116d4d51-9e3e-413c-8b4d-821b440bf7c6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -168,12 +168,62 @@
                 },
                 {
                     "name": "",
-                    "id": "60cbbdf9-0a41-4c8e-8f68-2702b7741694",
+                    "id": "d710f78f-4ab9-41b0-99af-411530fa3223",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Jump",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6c2e1f41-efbc-47fe-abad-b9163f89a2c7",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Dialogue",
+            "id": "60723f50-fd09-4be1-9cee-37eb2e882fbd",
+            "actions": [
+                {
+                    "name": "ProgressDialogue",
+                    "type": "Button",
+                    "id": "60d8fcd7-3d95-4f2f-ad6b-3027eb8f30e1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "669fff2c-4630-4e8d-8b29-ee6fa2d1e501",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ProgressDialogue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e0ea606d-f364-42cb-a8de-50f911967697",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ProgressDialogue",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -188,6 +238,16 @@
                 {
                     "devicePath": "<Keyboard>",
                     "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": true,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": true,
                     "isOR": false
                 }
             ]

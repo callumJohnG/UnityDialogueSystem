@@ -1,0 +1,23 @@
+[SetSpeakerPlayer] true
+
+Hi! who are you?
+
+[SwapSpeaker]
+
+Oh hi!
+
+...
+
+who am I?
+
+...
+
+BORGUS
+
+[SwapSpeaker]
+
+FUCK you
+
+[SwapSpeaker]
+
+NOOOOOOOOOOOO
