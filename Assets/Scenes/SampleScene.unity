@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -772,7 +772,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0.00000029802322, y: 10.420002, z: -14.722431}
+  m_LocalPosition: {x: 0.00000035762787, y: 10.420002, z: -14.722431}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1476,7 +1476,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 958404663}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0.00000029802322, y: 10.420002, z: -14.722431}
+  m_LocalPosition: {x: 0.00000035762787, y: 10.420002, z: -14.722431}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2358,6 +2358,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2049354657}
   - component: {fileID: 2049354656}
+  - component: {fileID: 2049354659}
+  - component: {fileID: 2049354658}
+  - component: {fileID: 2049354660}
   m_Layer: 0
   m_Name: DialogueBrain
   m_TagString: Untagged
@@ -2380,10 +2383,11 @@ MonoBehaviour:
   playerSprite: {fileID: 21300000, guid: f09eae8c0ea04254b90c5386a034a225, type: 3}
   playerColor: {r: 1, g: 0.38855177, b: 0, a: 1}
   playerName: Patrick
-  dialogueTextObject: {fileID: 24033532}
-  actorNameTextObject: {fileID: 2018702611}
   dialogueTextContainer: {fileID: 1720776279}
+  <dialogueTextBox>k__BackingField: {fileID: 24033532}
+  <actorNameTextBox>k__BackingField: {fileID: 2018702611}
   actorImage: {fileID: 805207740}
+  <defaultTextEntryAnimation>k__BackingField: 1
   OnDialogueStart:
     m_PersistentCalls:
       m_Calls:
@@ -2429,3 +2433,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2049354658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049354655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd1a660503e24647ab7d4f19a9d470b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2049354659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049354655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f972dc4a19fd3dd4da20efee6b2b228f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2049354660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049354655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bfc28cc312892b41997ee2170d34215, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

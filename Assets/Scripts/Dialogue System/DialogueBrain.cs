@@ -5,6 +5,22 @@ using TMPro;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+#region Enums
+
+public enum TextEntryAnimation{
+    scaleUp,
+    fadeIn
+}
+
+public enum TextMidAnimation{
+    wave,
+    shake
+}
+
+#endregion
+
+[RequireComponent(typeof(DialogueAnimator))]
+[RequireComponent(typeof(DialogueParser))]
 public class DialogueBrain : MonoBehaviour
 {
 
@@ -12,17 +28,23 @@ public class DialogueBrain : MonoBehaviour
 
     private void Awake(){
         Instance = this;
-
-        ConfigureControlListeners();
     }
 
-    private void OnEnable(){
-        controls.Enable();
+    private void Start(){
+        GetDialogueComponents();
     }
 
-    private void OnDisable(){
-        controls.Disable();
+    #region Dialogue Script References
+
+    private DialogueAnimator dialogueAnimator;
+    private DialogueParser dialogueParser;
+
+    private void GetDialogueComponents(){
+        dialogueAnimator = GetComponent<DialogueAnimator>();
+        dialogueParser = GetComponent<DialogueParser>();
     }
+
+    #endregion
 
     #region Serialized Varibles
 
@@ -31,27 +53,16 @@ public class DialogueBrain : MonoBehaviour
     [SerializeField] private Color playerColor;
     [SerializeField] private string playerName;
 
-    [Header("UI")]
-    [SerializeField] private TextMeshProUGUI dialogueTextObject;
-    [SerializeField] private TextMeshProUGUI actorNameTextObject;
+    [Header("Dialogue Animation / UI")]
     [SerializeField] private GameObject dialogueTextContainer;
+    [field:SerializeField] public TextMeshProUGUI dialogueTextBox {get; private set;}
+    [field:SerializeField] public TextMeshProUGUI actorNameTextBox {get; private set;}
     [SerializeField] private Image actorImage;
+    [field:SerializeField] public TextEntryAnimation defaultTextEntryAnimation {get; private set;}
 
     [Header("Global Events (Called on each dialogue")]
     [SerializeField] private UnityEvent OnDialogueStart;
     [SerializeField] private UnityEvent OnDialogueEnd;
-
-    #endregion
-
-    #region Player Input
-
-    private PlayerControls controls;
-
-    private void ConfigureControlListeners(){
-        controls = new PlayerControls();
-
-        controls.Dialogue.ProgressDialogue.performed += _ => NextDialogue();
-    }
 
     #endregion
 
@@ -79,7 +90,7 @@ public class DialogueBrain : MonoBehaviour
         //Dont need to call "NextDialogue()" here because it gets called by the input system (controls) when the player clicks to start the dialogue
     }
 
-    private void NextDialogue(){
+    public void NextDialogue(){
         if(!dialogueActive)return;
 
         Debug.Log("NEXT DIALOGUE");
@@ -89,20 +100,26 @@ public class DialogueBrain : MonoBehaviour
             EndDialogue();
             return;
         }
-
+        #region TO GO IN PARSER
+        
         //Get the next line in the text asset
         string nextDialogueString = currentDialogue[currentDialogueIndex];
         currentDialogueIndex++;
 
-        Debug.Log(nextDialogueString);
-
         //Process the next line of dialogue
         if(ProcessDialogue(nextDialogueString)){            
             //Set the dialogue text UI to have the next string
-            dialogueTextObject.text = nextDialogueString;
+            //dialogueTextObject.text = nextDialogueString;
+            dialogueAnimator.ShowText(nextDialogueString);
         } else {
             NextDialogue();
         }
+        
+        #endregion
+
+        //PLAN
+        //Parse the dialogue (dialogue parser)
+        //Show the dialogue (dialogue Animator)
     }
 
     private void EndDialogue(){
@@ -116,8 +133,6 @@ public class DialogueBrain : MonoBehaviour
 
         ResetDialogueVariables();
     }
-
-    
 
     #endregion
 
@@ -167,9 +182,9 @@ public class DialogueBrain : MonoBehaviour
 
     private void SetSpeakerVariables(Sprite actorSprite, Color textColor, string actorName){
         actorImage.sprite = actorSprite;
-        dialogueTextObject.color = textColor;
-        actorNameTextObject.color = textColor;
-        actorNameTextObject.text = actorName;
+        dialogueTextBox.color = textColor;
+        actorNameTextBox.color = textColor;
+        actorNameTextBox.text = actorName;
     }
 
     #endregion
