@@ -9,7 +9,8 @@ using UnityEngine.UI;
 
 public enum TextEntryAnimation{
     scaleUp,
-    fadeIn
+    fadeIn,
+    appear
 }
 
 public enum TextMidAnimation{
@@ -19,8 +20,7 @@ public enum TextMidAnimation{
 
 #endregion
 
-[RequireComponent(typeof(DialogueAnimator))]
-[RequireComponent(typeof(DialogueParser))]
+[RequireComponent(typeof(DialogueParser), typeof(DialogueAnimator))]
 public class DialogueBrain : MonoBehaviour
 {
 
@@ -92,6 +92,11 @@ public class DialogueBrain : MonoBehaviour
 
     public void NextDialogue(){
         if(!dialogueActive)return;
+
+        if(dialogueAnimator.animatingText){
+            dialogueAnimator.SkipText();
+            return;
+        }
 
         Debug.Log("NEXT DIALOGUE");
 

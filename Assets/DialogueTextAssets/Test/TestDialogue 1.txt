@@ -12,7 +12,7 @@ who am I?
 
 ...
 
-BORGUS
+<b> BORGUS! </b>
 
 [SwapSpeaker]
 
@@ -21,3 +21,5 @@ FUCK you
 [SwapSpeaker]
 
 NOOOOOOOOOOOO
+...
+<sub><i>fuck you</i></sub>
