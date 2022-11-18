@@ -59,6 +59,8 @@ public class DialogueBrain : MonoBehaviour
     [field:SerializeField] public TextMeshProUGUI actorNameTextBox {get; private set;}
     [SerializeField] private Image actorImage;
     [field:SerializeField] public TextEntryAnimation defaultTextEntryAnimation {get; private set;}
+    [field:SerializeField] public float characterAnimationTime {get; private set;}
+    [field:SerializeField] public float dialogueAnimationTimeBetweenCharacters {get; private set;}
 
     [Header("Global Events (Called on each dialogue")]
     [SerializeField] private UnityEvent OnDialogueStart;

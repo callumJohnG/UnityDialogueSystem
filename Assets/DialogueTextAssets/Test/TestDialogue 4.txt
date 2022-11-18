@@ -1,0 +1,11 @@
+[SetSpeakerPlayer] true
+
+hi
+
+this is
+
+a good test
+
+well
+
+goodbye
