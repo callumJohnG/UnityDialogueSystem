@@ -20,7 +20,7 @@ public enum TextMidAnimation{
 
 #endregion
 
-[RequireComponent(typeof(DialogueParser), typeof(DialogueAnimator))]
+[RequireComponent(typeof(DialogueParser), typeof(DialogueAnimator), typeof(AudioSource))]
 public class DialogueBrain : MonoBehaviour
 {
 
@@ -52,19 +52,34 @@ public class DialogueBrain : MonoBehaviour
     [SerializeField] private Sprite playerSprite;
     [SerializeField] private Color playerColor;
     [SerializeField] private string playerName;
+    [SerializeField] private List<AudioClip> playerVoice;
 
     [Header("Dialogue Animation / UI")]
     [SerializeField] private GameObject dialogueTextContainer;
     [field:SerializeField] public TextMeshProUGUI dialogueTextBox {get; private set;}
     [field:SerializeField] public TextMeshProUGUI actorNameTextBox {get; private set;}
     [SerializeField] private Image actorImage;
+
+    [Header("Animation")]
+    [SerializeField] private bool titleVar1;
     [field:SerializeField] public TextEntryAnimation defaultTextEntryAnimation {get; private set;}
-    [field:SerializeField] public float characterAnimationTime {get; private set;}
-    [field:SerializeField] public float dialogueAnimationTimeBetweenCharacters {get; private set;}
+    [field:SerializeField] public float charAnimationTime {get; private set;}
+    [field:SerializeField] public float charWaitTime {get; private set;}
+
+    [Header("Audio")]
+    [SerializeField] private bool titleVar2;
+    [field:SerializeField] public float voiceMinPitch {get; private set;} = 1;
+    [field:SerializeField] public float voiceMaxPitch {get; private set;} = 1;
 
     [Header("Global Events (Called on each dialogue")]
     [SerializeField] private UnityEvent OnDialogueStart;
     [SerializeField] private UnityEvent OnDialogueEnd;
+
+    #endregion
+
+    #region Private Variables
+
+    private List<AudioClip> currentSpeakerVoice;
 
     #endregion
 
@@ -95,7 +110,7 @@ public class DialogueBrain : MonoBehaviour
     public void NextDialogue(){
         if(!dialogueActive)return;
 
-        if(dialogueAnimator.animatingText){
+        if(!dialogueAnimator.IsDoneAnimating()){
             dialogueAnimator.SkipText();
             return;
         }
@@ -117,7 +132,8 @@ public class DialogueBrain : MonoBehaviour
         if(ProcessDialogue(nextDialogueString)){            
             //Set the dialogue text UI to have the next string
             //dialogueTextObject.text = nextDialogueString;
-            dialogueAnimator.ShowText(nextDialogueString);
+            DialogueComponent nextDialogueComponent = new DialogueComponent(currentSpeakerVoice, nextDialogueString);
+            dialogueAnimator.ShowText(nextDialogueComponent);
         } else {
             NextDialogue();
         }
@@ -181,17 +197,28 @@ public class DialogueBrain : MonoBehaviour
         playerSpeaking = shouldPlayerSpeak;
 
         if(playerSpeaking){
-            SetSpeakerVariables(playerSprite, playerColor, playerName);
+            SetSpeakerVariables(
+                playerSprite,
+                playerColor,
+                playerName,
+                playerVoice);
         } else {
-            SetSpeakerVariables(currentActor.actorSprite, currentActor.actorColor, currentActor.actorName);
+            SetSpeakerVariables(
+                currentActor.actorSprite,
+                currentActor.actorColor,
+                currentActor.actorName,
+                currentActor.actorVoice);
         }
     }
 
-    private void SetSpeakerVariables(Sprite actorSprite, Color textColor, string actorName){
-        actorImage.sprite = actorSprite;
+    private void SetSpeakerVariables(Sprite speakerSprite, Color textColor, string speakerName, List<AudioClip> speakerVoice){
+        actorImage.sprite = speakerSprite;
+        actorNameTextBox.text = speakerName;
+
         dialogueTextBox.color = textColor;
         actorNameTextBox.color = textColor;
-        actorNameTextBox.text = actorName;
+
+        currentSpeakerVoice = speakerVoice;
     }
 
     #endregion

@@ -10,22 +10,36 @@ public class DialogueAnimator : MonoBehaviour
 
     #region Variables
 
+    #region From Brain
     private TextMeshProUGUI dialogueTextBox;
-    private TMP_Text textObject;
-    private TMP_TextInfo textInfo = null;
     private TextEntryAnimation defaultTextEntryAnimation;
     private float characterAnimationTime;
-    private float dialogueAnimationTimeBetweenCharacters;
+    private float characterWaitTime;
 
+    #endregion
 
+    #region Private
+
+    private TMP_Text textObject;
+    private TMP_TextInfo textInfo = null;
+    private float totalCharacters;
+    private float visibleCharacters = 0;
     private List<Coroutine> allActiveCoroutines = new List<Coroutine>();
-
-
-
     private static readonly Color32 CLEAR = new Color32(0, 0, 0, 0);
-
     private TMP_MeshInfo[] cachedMeshInfo;
-    Color32[][] originalColors;
+    private Color32[][] originalColors;
+    private DialogueComponent currentDialogueComponent;
+    private AudioSource voiceAudioSource;
+    private float voiceMaxPitch;
+    private float voiceMinPitch;
+
+    #endregion
+
+    #region Public To Brain
+    
+    public bool animatingText {get; private set;} = false;
+
+    #endregion
 
     #endregion
 
@@ -33,15 +47,22 @@ public class DialogueAnimator : MonoBehaviour
         GetVariablesFromBrain();
     }
 
+    #region Set-Up
+
     private void GetVariablesFromBrain(){
         dialogueBrain = GetComponent<DialogueBrain>();
+        voiceAudioSource = GetComponent<AudioSource>();
 
         dialogueTextBox = dialogueBrain.dialogueTextBox;
 
         defaultTextEntryAnimation = dialogueBrain.defaultTextEntryAnimation;
 
-        characterAnimationTime = dialogueBrain.characterAnimationTime;
-        dialogueAnimationTimeBetweenCharacters = dialogueBrain.dialogueAnimationTimeBetweenCharacters;
+        this.characterAnimationTime = dialogueBrain.charAnimationTime;
+        this.characterWaitTime = dialogueBrain.charWaitTime;
+
+        this.voiceMinPitch = dialogueBrain.voiceMinPitch;
+        this.voiceMaxPitch = dialogueBrain.voiceMaxPitch;
+
     }
 
     private void GetTMPObjects(){
@@ -52,22 +73,23 @@ public class DialogueAnimator : MonoBehaviour
         textInfo = textObject.textInfo;
     }
 
-    public bool animatingText {get; private set;} = false;
+    #endregion
 
-    public void ShowText(string dialogueText){
+    #region Main Animation Functions (Show Text / Skip Text)
+
+
+    public void ShowText(DialogueComponent nextDialogueComponent){
+        currentDialogueComponent = nextDialogueComponent;
+
         animatingText = true;
         allActiveCoroutines.Clear();
 
         ClearTextBoxMesh();
 
-
-        dialogueTextBox.text = dialogueText;
+        dialogueTextBox.text = currentDialogueComponent.dialogueString;
         dialogueTextBox.ForceMeshUpdate();
 
         CacheMeshInfo();
-
-        
-        //GetTMPObjects();
 
         //Prepare the text based on which animation is happening
         PrepareTextMesh();
@@ -80,51 +102,12 @@ public class DialogueAnimator : MonoBehaviour
     public void SkipText(){
         Debug.Log("SKipping text");
         animatingText = false;
+        visibleCharacters = totalCharacters;
 
         StopAllCoroutines();
 
         ShowAllCharacters();
 
-    }
-
-    private void PrepareTextMesh(){
-        //Set all the alphas to 0
-        //Change this depending on which animation is default
-        /*foreach(TMP_WordInfo wordInfo in wordInfos){
-            try{
-                Debug.Log("new word:" + wordInfo.GetWord());
-            }catch{Debug.Log("ERROR getting word");}
-            //Loop through each character in the word
-            Debug.Log(wordInfo.characterCount);
-            //Debug.Log(wordInfo.GetWord());
-            for(int i = 0; i < wordInfo.characterCount; i++){
-                
-                //Get the relavent indexes
-                int charIndex = wordInfo.firstCharacterIndex + i;
-                TMP_CharacterInfo characterInfo = textInfo.characterInfo[charIndex];
-                int meshIndex = characterInfo.materialReferenceIndex;
-                int vertexIndex = characterInfo.vertexIndex;
-
-                //Set all the vertex alphas to 0
-                Color32[] vertexColors = textInfo.meshInfo[meshIndex].colors32;
-                Color32 startColor = vertexColors[vertexIndex];
-                startColor.a = 0;
-                SetVertexColours(vertexColors, vertexIndex, startColor);
-            }
-        }*/
-        for(int i = 0; i < textInfo.characterCount; i ++){
-            TMP_CharacterInfo characterInfo = textInfo.characterInfo[i];
-            
-            int meshIndex = characterInfo.materialReferenceIndex;
-            int vertexIndex = characterInfo.vertexIndex;
-
-            //Set all the vertex alphas to 0
-            Color32[] vertexColors = textInfo.meshInfo[meshIndex].colors32;
-            Color32 startColor = vertexColors[vertexIndex];
-            startColor.a = 0;
-            SetVertexColours(vertexColors, vertexIndex, CLEAR);
-        }
-        dialogueTextBox.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
     }
 
     private void CacheMeshInfo(){
@@ -152,7 +135,9 @@ public class DialogueAnimator : MonoBehaviour
     }
 
     private IEnumerator AnimateInDialogue(){
-        float timeOfCharacterAnim = Time.time - dialogueAnimationTimeBetweenCharacters;
+        totalCharacters = textInfo.characterCount;
+
+        float timeOfCharacterAnim = Time.time - characterWaitTime;
 
         //Loop through each character in the dialogue
         for(int i = 0; i < textInfo.characterCount; i++){
@@ -160,46 +145,18 @@ public class DialogueAnimator : MonoBehaviour
             if(!characterInfo.isVisible)continue;
             
             //Wait untill we can start the animation
-            yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + dialogueAnimationTimeBetweenCharacters);
-            Debug.Log("Next Character");
+            yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + characterWaitTime);
+            
+            
             //Perform the animation
-            allActiveCoroutines.Add(StartCoroutine(AnimateInCharacter(characterInfo)));
+            AnimateInCharacter(characterInfo);
             timeOfCharacterAnim = Time.time;
+            PlayVoiceAudio();
         }
         
         
         animatingText = false;
         yield return null;
-    }
-
-    private IEnumerator AnimateInCharacter(TMP_CharacterInfo characterInfo){
-        float currentTime = 0;
-        //float waitPeriod = characterAnimationTime / 100;
-        while(currentTime < characterAnimationTime){
-            Debug.Log("Step");
-            PerformCharacterAnimationStep(characterInfo, currentTime / characterAnimationTime);
-            currentTime += Time.deltaTime;
-
-            dialogueTextBox.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
-            yield return new WaitForFixedUpdate();
-        }
-
-        //yield return null;
-    }
-
-    private void PerformCharacterAnimationStep(TMP_CharacterInfo characterInfo, float currentTime){
-        //IMPROVE THIS TO TAKE CARE OF ALL ANIMATION TYPES
-        //CURRENTLY JUST FADES IN
-
-        //Lerp the colour of the vertex
-        int meshIndex = characterInfo.materialReferenceIndex;
-        int vertexIndex = characterInfo.vertexIndex;
-
-        Color32[] vertexColors = textInfo.meshInfo[meshIndex].colors32;
-        Color32 currentColor = vertexColors[vertexIndex];
-        Color32 endColor = originalColors[meshIndex][vertexIndex];
-        Color32 lerpColor = Color32.Lerp(currentColor, endColor, currentTime);
-        SetVertexColours(vertexColors, vertexIndex, lerpColor);
     }
 
     private void ShowAllCharacters(){
@@ -216,6 +173,136 @@ public class DialogueAnimator : MonoBehaviour
         dialogueTextBox.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
     }
 
+    #endregion
+
+    #region Animation Type Dependant Functions
+
+    #region Set-Up
+
+    private void PrepareTextMesh(){
+        switch(defaultTextEntryAnimation){
+            case TextEntryAnimation.fadeIn :
+            case TextEntryAnimation.appear :
+                PrepareTextMeshAlpha0();
+                break;
+            case TextEntryAnimation.scaleUp :
+                PrepareTextMeshScale0();
+                break;
+        }
+        dialogueTextBox.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
+    }
+
+    private void PrepareTextMeshAlpha0(){
+        Debug.Log("Setting alphas to 0");
+        for(int i = 0; i < textInfo.characterCount; i ++){
+            TMP_CharacterInfo characterInfo = textInfo.characterInfo[i];
+            
+            int meshIndex = characterInfo.materialReferenceIndex;
+            int vertexIndex = characterInfo.vertexIndex;
+
+            //Set all the vertex alphas to 0
+            Color32[] vertexColors = textInfo.meshInfo[meshIndex].colors32;
+            Color32 startColor = vertexColors[vertexIndex];
+            startColor.a = 0;
+            SetVertexColours(vertexColors, vertexIndex, CLEAR);
+        }
+    }
+
+    private void PrepareTextMeshScale0(){
+
+    }
+
+    #endregion
+
+    #region Animation
+
+    private void AnimateInCharacter(TMP_CharacterInfo characterInfo){
+        switch(defaultTextEntryAnimation){
+            case TextEntryAnimation.appear :
+                CharacterAnimationAppear(characterInfo);
+                break;
+            case TextEntryAnimation.scaleUp :
+                allActiveCoroutines.Add(StartCoroutine(CharacterAnimationScaleUp(characterInfo)));
+                break;
+            case TextEntryAnimation.fadeIn :
+                allActiveCoroutines.Add(StartCoroutine(CharacterAnimationFadeIn(characterInfo)));
+                break;
+        }
+    }
+
+    private void CharacterAnimationAppear(TMP_CharacterInfo characterInfo){
+        //Show the character
+        int meshIndex = characterInfo.materialReferenceIndex;
+        int vertexIndex = characterInfo.vertexIndex;
+
+        Color32[] vertexColors = textInfo.meshInfo[meshIndex].colors32;
+        Color32 newColor = originalColors[meshIndex][vertexIndex];
+        SetVertexColours(vertexColors, vertexIndex, newColor);
+
+        dialogueTextBox.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
+
+        visibleCharacters ++; //Indicates that we have finished animating;
+    }
+
+    private IEnumerator CharacterAnimationFadeIn(TMP_CharacterInfo characterInfo){
+        float currentTime = 0;
+
+        while(currentTime < characterAnimationTime){
+
+            //Perform an animation step
+            //Lerp the colour of the vertex
+            int meshIndex = characterInfo.materialReferenceIndex;
+            int vertexIndex = characterInfo.vertexIndex;
+
+            Color32[] vertexColors = textInfo.meshInfo[meshIndex].colors32;
+            Color32 currentColor = vertexColors[vertexIndex];
+            Color32 endColor = originalColors[meshIndex][vertexIndex];
+            Color32 lerpColor = Color32.Lerp(currentColor, endColor, currentTime / characterAnimationTime);
+            SetVertexColours(vertexColors, vertexIndex, lerpColor);
+
+
+
+            currentTime += Time.deltaTime;
+            dialogueTextBox.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
+            yield return null;
+        }
+
+        visibleCharacters ++; //Indicates that we have finished animating;
+    }
+
+    private IEnumerator CharacterAnimationScaleUp(TMP_CharacterInfo characterInfo){
+        yield return null;
+    }
+
+    private void PerformCharacterAnimationStep(TMP_CharacterInfo characterInfo, float currentTime){
+        //IMPROVE THIS TO TAKE CARE OF ALL ANIMATION TYPES
+        //CURRENTLY JUST FADES IN
+
+        
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Audio
+
+    private void PlayVoiceAudio(){
+        //If there's no voice, then do nothing
+        if(currentDialogueComponent.speakerVoice.Count == 0)return;
+
+        //Pick a random audio clip to use
+        AudioClip randomClip = currentDialogueComponent.speakerVoice[UnityEngine.Random.Range(0, currentDialogueComponent.speakerVoice.Count)];
+
+        //Pick a random pitch for our audio source
+        float randomPitch = UnityEngine.Random.Range(voiceMinPitch, voiceMaxPitch);
+        voiceAudioSource.pitch = randomPitch;
+
+        voiceAudioSource.PlayOneShot(randomClip);
+    }
+
+    #endregion
+
     #region Helpers
 
     private void SetVertexColours(Color32[] vertexColors, int vertexIndex, Color32 newColor){
@@ -223,6 +310,14 @@ public class DialogueAnimator : MonoBehaviour
         vertexColors[vertexIndex + 1] = newColor;
         vertexColors[vertexIndex + 2] = newColor;
         vertexColors[vertexIndex + 3] = newColor;
+    }
+
+    public bool IsDoneAnimating(){
+        if(animatingText) return false;
+
+        if(visibleCharacters < totalCharacters) return false;
+
+        return true;
     }
 
     #endregion

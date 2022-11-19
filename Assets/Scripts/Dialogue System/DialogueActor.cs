@@ -11,6 +11,7 @@ public class DialogueActor : MonoBehaviour
     [field:SerializeField] public Sprite actorSprite {get; private set;}
     [field:SerializeField] public Color actorColor {get; private set;}
     [field:SerializeField] public string actorName {get; private set;}
+    [field:SerializeField] public List<AudioClip> actorVoice {get; private set;}
 
     private int dialogueIndex = 0;
 
