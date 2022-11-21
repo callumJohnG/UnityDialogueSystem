@@ -1,0 +1,19 @@
+[SetSpeakerPlayer] true
+
+hiya
+
+[SwapSpeaker]
+
+hey ho!
+
+[SwapSpeaker]
+
+whats cookin'?
+
+[SwapSpeaker]
+
+bugs
+
+[SwapSpeaker]
+
+sweeeet

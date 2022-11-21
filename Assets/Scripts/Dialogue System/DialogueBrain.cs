@@ -7,20 +7,26 @@ using UnityEngine.UI;
 
 #region Enums
 
-public enum TextEntryAnimation{
+public enum TextEntryAnimationType{
     scaleUp,
     fadeIn,
     appear
 }
 
-public enum TextMidAnimation{
+public enum DialogueCommandType{
+    anim_start,
+    anim_end,
+}
+
+public enum TextAnimationType{
+    none,
     wave,
-    shake
+    shake,
 }
 
 #endregion
 
-[RequireComponent(typeof(DialogueParser), typeof(DialogueAnimator), typeof(AudioSource))]
+[RequireComponent(typeof(DialogueAnimator), typeof(AudioSource))]
 public class DialogueBrain : MonoBehaviour
 {
 
@@ -37,11 +43,10 @@ public class DialogueBrain : MonoBehaviour
     #region Dialogue Script References
 
     private DialogueAnimator dialogueAnimator;
-    private DialogueParser dialogueParser;
+    private DialogueParser parser = new DialogueParser();
 
     private void GetDialogueComponents(){
         dialogueAnimator = GetComponent<DialogueAnimator>();
-        dialogueParser = GetComponent<DialogueParser>();
     }
 
     #endregion
@@ -62,7 +67,7 @@ public class DialogueBrain : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private bool titleVar1;
-    [field:SerializeField] public TextEntryAnimation defaultTextEntryAnimation {get; private set;}
+    [field:SerializeField] public TextEntryAnimationType defaultTextEntryAnimation {get; private set;}
     [field:SerializeField] public float charAnimationTime {get; private set;}
     [field:SerializeField] public float charWaitTime {get; private set;}
 
@@ -79,16 +84,14 @@ public class DialogueBrain : MonoBehaviour
 
     #region Private Variables
 
-    private List<AudioClip> currentSpeakerVoice;
+    private List<AudioClip> currentSpeakerVoice;private DialogueActor currentActor;
+    private List<string> currentDialogue;
+    private int currentDialogueIndex = 0;
+    private bool dialogueActive = false;
 
     #endregion
 
     #region Dialogue Brain
-
-    private DialogueActor currentActor;
-    private List<string> currentDialogue;
-    private int currentDialogueIndex = 0;
-    private bool dialogueActive = false;
 
     public void StartDialogue(DialogueActor actor, TextAsset dialogeText){
         Debug.Log("Dialoge Starting");
@@ -122,27 +125,29 @@ public class DialogueBrain : MonoBehaviour
             EndDialogue();
             return;
         }
+
+        
         #region TO GO IN PARSER
         
         //Get the next line in the text asset
         string nextDialogueString = currentDialogue[currentDialogueIndex];
         currentDialogueIndex++;
 
-        //Process the next line of dialogue
-        if(ProcessDialogue(nextDialogueString)){            
-            //Set the dialogue text UI to have the next string
-            //dialogueTextObject.text = nextDialogueString;
-            DialogueComponent nextDialogueComponent = new DialogueComponent(currentSpeakerVoice, nextDialogueString);
+        //PRE PROCESS THE STRING - IF IT IS A MAIN COMMAND (on its own line) THEN EXECUTE THE COMMAND
+
+        //OTHERWISE, GO ON TO NORMAL PARSING (here)
+
+        if(ProcessDialogue(nextDialogueString)){//THIS CHECK IS TEMPORARY UNTILL PRE-PARSING IS IN
+            //Parse the text
+            DialogueComponent nextDialogueComponent = parser.ParseDialogueString(nextDialogueString);
+            //Set the speaker voice and pass into the animator
+            nextDialogueComponent.SetSpeakerVoice(currentSpeakerVoice);
             dialogueAnimator.ShowText(nextDialogueComponent);
         } else {
             NextDialogue();
         }
         
         #endregion
-
-        //PLAN
-        //Parse the dialogue (dialogue parser)
-        //Show the dialogue (dialogue Animator)
     }
 
     private void EndDialogue(){

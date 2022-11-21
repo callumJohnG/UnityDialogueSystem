@@ -12,7 +12,7 @@ public class DialogueAnimator : MonoBehaviour
 
     #region From Brain
     private TextMeshProUGUI dialogueTextBox;
-    private TextEntryAnimation defaultTextEntryAnimation;
+    private TextEntryAnimationType defaultTextEntryAnimation;
     private float characterAnimationTime;
     private float characterWaitTime;
 
@@ -102,7 +102,8 @@ public class DialogueAnimator : MonoBehaviour
     public void SkipText(){
         Debug.Log("SKipping text");
         animatingText = false;
-        visibleCharacters = totalCharacters;
+        visibleCharacters = 0;
+        totalCharacters = 0;
 
         StopAllCoroutines();
 
@@ -136,13 +137,17 @@ public class DialogueAnimator : MonoBehaviour
 
     private IEnumerator AnimateInDialogue(){
         totalCharacters = textInfo.characterCount;
+        visibleCharacters = 0;
 
         float timeOfCharacterAnim = Time.time - characterWaitTime;
 
         //Loop through each character in the dialogue
         for(int i = 0; i < textInfo.characterCount; i++){
             TMP_CharacterInfo characterInfo = textInfo.characterInfo[i];
-            if(!characterInfo.isVisible)continue;
+            if(!characterInfo.isVisible){
+                totalCharacters--; //We dont count invisible characters in our total
+                continue;
+            }
             
             //Wait untill we can start the animation
             yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + characterWaitTime);
@@ -181,11 +186,11 @@ public class DialogueAnimator : MonoBehaviour
 
     private void PrepareTextMesh(){
         switch(defaultTextEntryAnimation){
-            case TextEntryAnimation.fadeIn :
-            case TextEntryAnimation.appear :
+            case TextEntryAnimationType.fadeIn :
+            case TextEntryAnimationType.appear :
                 PrepareTextMeshAlpha0();
                 break;
-            case TextEntryAnimation.scaleUp :
+            case TextEntryAnimationType.scaleUp :
                 PrepareTextMeshScale0();
                 break;
         }
@@ -218,13 +223,13 @@ public class DialogueAnimator : MonoBehaviour
 
     private void AnimateInCharacter(TMP_CharacterInfo characterInfo){
         switch(defaultTextEntryAnimation){
-            case TextEntryAnimation.appear :
+            case TextEntryAnimationType.appear :
                 CharacterAnimationAppear(characterInfo);
                 break;
-            case TextEntryAnimation.scaleUp :
+            case TextEntryAnimationType.scaleUp :
                 allActiveCoroutines.Add(StartCoroutine(CharacterAnimationScaleUp(characterInfo)));
                 break;
-            case TextEntryAnimation.fadeIn :
+            case TextEntryAnimationType.fadeIn :
                 allActiveCoroutines.Add(StartCoroutine(CharacterAnimationFadeIn(characterInfo)));
                 break;
         }

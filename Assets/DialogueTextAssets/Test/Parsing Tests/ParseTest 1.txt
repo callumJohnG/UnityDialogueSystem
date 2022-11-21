@@ -1,0 +1,3 @@
+[SetSpeakerPlayer] true
+
+This is <anim:wave>a test</anim>
