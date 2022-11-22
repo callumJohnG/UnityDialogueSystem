@@ -16,6 +16,8 @@ public enum TextEntryAnimationType{
 public enum DialogueCommandType{
     anim_start,
     anim_end,
+    setPlayerSpeaker,
+    swapSpeaker
 }
 
 public enum TextAnimationType{
@@ -127,27 +129,30 @@ public class DialogueBrain : MonoBehaviour
         }
 
         
-        #region TO GO IN PARSER
-        
         //Get the next line in the text asset
         string nextDialogueString = currentDialogue[currentDialogueIndex];
         currentDialogueIndex++;
 
-        //PRE PROCESS THE STRING - IF IT IS A MAIN COMMAND (on its own line) THEN EXECUTE THE COMMAND
 
-        //OTHERWISE, GO ON TO NORMAL PARSING (here)
-
-        if(ProcessDialogue(nextDialogueString)){//THIS CHECK IS TEMPORARY UNTILL PRE-PARSING IS IN
-            //Parse the text
-            DialogueComponent nextDialogueComponent = parser.ParseDialogueString(nextDialogueString);
-            //Set the speaker voice and pass into the animator
-            nextDialogueComponent.SetSpeakerVoice(currentSpeakerVoice);
-            dialogueAnimator.ShowText(nextDialogueComponent);
-        } else {
+        //Check for main line commands with the parser
+        if(parser.PreParseDialogueString(nextDialogueString, out List<DialogueCommand> resultCommands)){
+            //Execute the main line commands and go to next line
+            foreach(DialogueCommand command in resultCommands){
+                ExecuteMainCommand(command);
+            }
             NextDialogue();
+            return;
         }
+
+
+
+        //If there was no main line commands, then continue with normal parsing
+
+        DialogueComponent nextDialogueComponent = parser.ParseDialogueString(nextDialogueString);
+        //Set the speaker voice and pass into the animator
+        nextDialogueComponent.SetSpeakerVoice(currentSpeakerVoice);
+        dialogueAnimator.ShowText(nextDialogueComponent);
         
-        #endregion
     }
 
     private void EndDialogue(){
@@ -166,24 +171,15 @@ public class DialogueBrain : MonoBehaviour
 
     #region Dialogue Processing
 
-    private bool ProcessDialogue(string dialogueString){
-        
-        //Pattern matching to get the correct function to run
-        if(dialogueString.Contains("[SetSpeakerPlayer]")){
-            bool value = dialogueString.Contains("true");
-            SwapSpeaker(value);
-            return false;
+    private void ExecuteMainCommand(DialogueCommand command){
+        switch(command.commandType){
+            case DialogueCommandType.setPlayerSpeaker :
+                SwapSpeaker(command.boolValue);
+                break;
+            case DialogueCommandType.swapSpeaker :
+                SwapSpeaker();
+                break;
         }
-
-        else if(dialogueString.Contains("[SwapSpeaker]")){
-            SwapSpeaker();
-            return false;
-        }
-
-
-        //it is just normal text
-        return true;
-        
     }
 
     private void SetDefaultDialogueSettings(){

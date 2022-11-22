@@ -47,6 +47,10 @@ public class DialogueAnimator : MonoBehaviour
         GetVariablesFromBrain();
     }
 
+    private void Update(){
+        UpdateTextAnimation();
+    }
+
     #region Set-Up
 
     private void GetVariablesFromBrain(){
@@ -93,6 +97,9 @@ public class DialogueAnimator : MonoBehaviour
 
         //Prepare the text based on which animation is happening
         PrepareTextMesh();
+
+        //Set up the text update animation with the pointers
+        InitialiseTextAnimation(currentDialogueComponent.dialogueString.Length, currentDialogueComponent.dialogueCommands);
 
         //Animate in the text
         allActiveCoroutines.Add(StartCoroutine(AnimateInDialogue()));
@@ -287,6 +294,63 @@ public class DialogueAnimator : MonoBehaviour
     }
 
     #endregion
+
+    #endregion
+
+    #region Update Text Animation
+
+    private List<DialogueCommand> dialogueAnimPointers = new List<DialogueCommand>();
+
+    //Make a list of dialogueCommands that indicate what animation should be playing on each character
+    private void InitialiseTextAnimation(int length, List<DialogueCommand> allCommands){
+        TextAnimationType currentAnimType = TextAnimationType.none;
+        dialogueAnimPointers.Clear();
+
+        for(int i = 0; i < length; i++){
+            foreach(DialogueCommand command in allCommands){
+                if(command.charIndex != i)continue;
+                //If its not an animation command, then continue
+                if(command.commandType != DialogueCommandType.anim_start && command.commandType != DialogueCommandType.anim_end)continue;
+                
+                //There is a command on this spot
+                currentAnimType = command.animationType;
+            }
+            dialogueAnimPointers.Add(new DialogueCommand(
+                commandType:    DialogueCommandType.anim_start,
+                charIndex:      i,
+                animationType:  currentAnimType
+            ));
+        }
+    }
+
+    private void UpdateTextAnimation(){
+        //We want to step through each index of the characters in the dialouge
+        //at each 
+
+        //Loop through all our pointers and execute all animations.
+        foreach(DialogueCommand animationPointer in dialogueAnimPointers){
+            if(animationPointer.animationType == TextAnimationType.none)continue;
+
+            PerformTextAnimation(animationPointer);
+        }
+    }
+
+    private void PerformTextAnimation(DialogueCommand animationPointer){
+        switch(animationPointer.animationType){
+            case TextAnimationType.wave:
+                PerformWaveAnimation(animationPointer.charIndex);break;
+            case TextAnimationType.shake:
+                PerformShakeAnimation(animationPointer.charIndex);break;
+        }
+    }
+
+    private void PerformWaveAnimation(int characterIndex){
+
+    }
+
+    private void PerformShakeAnimation(int characterIndex){
+
+    }
 
     #endregion
 

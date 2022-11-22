@@ -1,3 +1,11 @@
-[SetSpeakerPlayer] true
+<setPlayerSpeaker:true><swapSpeaker>
 
-This is <anim:wave>a test</anim>
+This is <anim:wave>a test</anim>. Hopefully it <anim:shake>works</anim>.
+
+<swapSpeaker>
+
+Say <anim:shake>what??</anim>
+
+<swapSpeaker><swapSpeaker><swapSpeaker>
+
+I know right?

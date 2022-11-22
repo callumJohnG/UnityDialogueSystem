@@ -17,10 +17,95 @@ public class DialogueParser
     private static readonly Regex animStartRegex = new Regex(ANIM_START_REGEX_STRING);
     private const string ANIM_END_REGEX_STRING = "</anim>";
     private static readonly Regex animEndRegex = new Regex(ANIM_END_REGEX_STRING);
+    private const string SET_SPEAKER_REGEX_STRING = "<setPlayerSpeaker:(?<bool>" + REMAINDER_REGEX + ")>";
+    private static readonly Regex setSpeakerRegex = new Regex(SET_SPEAKER_REGEX_STRING);
+    private const string SWAP_SPEAKER_REGEX_STRING = "<swapSpeaker>";
+    private static readonly Regex swapSpeakerRegex = new Regex(SWAP_SPEAKER_REGEX_STRING);
 
     #endregion
 
     public DialogueParser(){}
+
+    #region Pre Parsing
+
+    public bool PreParseDialogueString(string dialogeString, out List<DialogueCommand> resultCommands){
+        Debug.Log("Pre Parsing, checking for main-line commands");
+
+        resultCommands = new List<DialogueCommand>();
+        bool boolResult = false;
+        List<DialogueCommand> tempCommands;
+
+        //Search for setPlayerSpeaker Command
+        if(ParseSetSpeakerRegex(dialogeString, out tempCommands)){
+            resultCommands.AddRange(tempCommands);
+            boolResult = true;
+        }
+
+        //Search for a swapPlayerSpeaker command
+        if(ParseSwapSpeakerRegex(dialogeString, out tempCommands)){
+            resultCommands.AddRange(tempCommands);
+            boolResult = true;
+        }
+
+        //,,,,Put other main line commands here when added
+
+        return boolResult;
+    }
+
+    #region Specific Regex
+
+    private bool ParseSetSpeakerRegex(string dialogeString, out List<DialogueCommand> resultCommands){
+        
+        resultCommands = new List<DialogueCommand>();
+        bool boolResult = false;
+
+
+        //Get all the matches and loop through them
+        MatchCollection speakerMatches = setSpeakerRegex.Matches(dialogeString);
+        foreach(Match match in speakerMatches){
+            Debug.Log("Match! at " + match.Index);
+
+            //Get the value written in the command
+            bool commandInput = match.Groups["bool"].Value == "true";
+
+            //For each match, make a new command
+            resultCommands.Add( new DialogueCommand(
+                commandType:    DialogueCommandType.setPlayerSpeaker,
+                boolValue:      commandInput
+            ));
+            boolResult = true;
+        }
+
+        return boolResult;
+    }
+
+    private bool ParseSwapSpeakerRegex(string dialogeString, out List<DialogueCommand> resultCommands){
+        
+        resultCommands = new List<DialogueCommand>();
+        bool boolResult = false;
+
+
+        //Get all the matches and loop through them
+        MatchCollection speakerMatches = swapSpeakerRegex.Matches(dialogeString);
+        foreach(Match match in speakerMatches){
+            Debug.Log("Match! at " + match.Index);
+
+            //For each match, make a new command
+            resultCommands.Add( new DialogueCommand(
+                commandType:    DialogueCommandType.swapSpeaker
+            ));
+            boolResult = true;
+        }
+
+        
+        return boolResult;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Main Parsing
 
     public DialogueComponent ParseDialogueString(string dialogeString){
         Debug.Log("Parsing : " + dialogeString);
@@ -48,13 +133,10 @@ public class DialogueParser
         newCommands.AddRange(tempCommands);
 
         
-
-
-
-        return new List<DialogueCommand>();
+        return newCommands;
     }
 
-    #region Specific Regex
+    #region Specific Regex Parsing
 
     private string ParseAnimStartRegex(string dialogeString, out List<DialogueCommand> newCommands){
         Debug.Log("Parsing against anim start regex");
@@ -159,4 +241,6 @@ public class DialogueParser
     }
 
     #endregion 
+
+    #endregion
 }
