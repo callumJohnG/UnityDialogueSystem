@@ -2660,8 +2660,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1ce3a885a1b0a134d932ee915f4284e7, type: 3}
   dialogueTextContainer: {fileID: 1720776279}
   <dialogueTextBox>k__BackingField: {fileID: 24033532}
-  <actorNameTextBox>k__BackingField: {fileID: 2018702611}
-  actorImage: {fileID: 805207740}
+  <speakerNameTextBox>k__BackingField: {fileID: 2018702611}
+  speakerImage: {fileID: 805207740}
   titleVar1: 0
   <defaultTextEntryAnimation>k__BackingField: 2
   <charAnimationTime>k__BackingField: 0.2

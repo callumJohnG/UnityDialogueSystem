@@ -66,8 +66,8 @@ public class DialogueBrain : MonoBehaviour
     [Header("Dialogue Animation / UI")]
     [SerializeField] private GameObject dialogueTextContainer;
     [field:SerializeField] public TextMeshProUGUI dialogueTextBox {get; private set;}
-    [field:SerializeField] public TextMeshProUGUI actorNameTextBox {get; private set;}
-    [SerializeField] private Image actorImage;
+    [field:SerializeField] public TextMeshProUGUI speakerNameTextBox {get; private set;}
+    [SerializeField] private Image speakerImage;
 
     [Header("Animation")]
     [SerializeField] private bool titleVar1;
@@ -213,11 +213,13 @@ public class DialogueBrain : MonoBehaviour
     }
 
     private void SetSpeakerVariables(Sprite speakerSprite, Color textColor, string speakerName, List<AudioClip> speakerVoice){
-        actorImage.sprite = speakerSprite;
-        actorNameTextBox.text = speakerName;
+        try{speakerImage.sprite = speakerSprite;}catch{}
+        try{
+            speakerNameTextBox.text = speakerName;
+            speakerNameTextBox.color = textColor;
+        }catch{}
 
         dialogueTextBox.color = textColor;
-        actorNameTextBox.color = textColor;
 
         currentSpeakerVoice = speakerVoice;
     }
