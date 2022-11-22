@@ -2213,7 +2213,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueList:
-  - {fileID: 4900000, guid: 134dfe6ed4f39284691b69eec27ca111, type: 3}
+  - {fileID: 4900000, guid: 90eaa164a54b6ea4cadd5b06d67aec62, type: 3}
+  - {fileID: 4900000, guid: fc6740614bed7fe4ebd3b4de65626250, type: 3}
   <actorSprite>k__BackingField: {fileID: 21300000, guid: f9161c6c9e06dc445ada3ee16d991f90,
     type: 3}
   <actorColor>k__BackingField: {r: 0, g: 1, b: 0.023376703, a: 1}

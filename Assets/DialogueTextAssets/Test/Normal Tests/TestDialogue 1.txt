@@ -1,8 +1,8 @@
-[SetSpeakerPlayer] true
+<setPlayerSpeaker:true>
 
 Hi! who are you?
 
-[SwapSpeaker]
+<swapSpeaker>
 
 Oh hi!
 
@@ -12,14 +12,13 @@ who am I?
 
 ...
 
-<b> BORGUS! </b>
+<b><anim:wave>BORGUS!</anim></b>
 
-[SwapSpeaker]
+<swapSpeaker>
 
-FUCK you
-
-[SwapSpeaker]
-
-NOOOOOOOOOOOO
 ...
-<sub><i>fuck you</i></sub>
+<sub>please dont shout at me</sub>
+
+<swapSpeaker>
+
+<b><anim:shake>FUCK YOU!!!</anim></b>

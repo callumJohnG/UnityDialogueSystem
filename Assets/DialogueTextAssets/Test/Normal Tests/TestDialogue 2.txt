@@ -1,8 +1,9 @@
-[SetSpeakerPlayer] false
+<setPlayerSpeaker:false>
 
 didnt i tell you....
 
-FUCK OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!
+<anim:shake><b>FUCK OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!</b></anim>
 
-[SwapSpeaker]
-AHHHHH
+<swapSpeaker>
+
+AHHHHH!

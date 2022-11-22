@@ -4,6 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+public struct AnimationRange{
+    public int startIndex {get; private set;}
+    public int endIndex {get; private set;}
+    public TextAnimationType animationType {get; private set;}
+
+    public AnimationRange(int startIndex, int endIndex, TextAnimationType animationType){
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        this.animationType = animationType;
+    }
+}
+
 public class DialogueAnimator : MonoBehaviour
 {
     private DialogueBrain dialogueBrain;
@@ -299,12 +311,13 @@ public class DialogueAnimator : MonoBehaviour
 
     #region Update Text Animation
 
-    private List<DialogueCommand> dialogueAnimPointers = new List<DialogueCommand>();
+    private List<AnimationRange> animationRanges = new List<AnimationRange>();
 
     //Make a list of dialogueCommands that indicate what animation should be playing on each character
     private void InitialiseTextAnimation(int length, List<DialogueCommand> allCommands){
         TextAnimationType currentAnimType = TextAnimationType.none;
-        dialogueAnimPointers.Clear();
+        animationRanges.Clear();
+        int startIndex = 0;
 
         for(int i = 0; i < length; i++){
             foreach(DialogueCommand command in allCommands){
@@ -313,44 +326,84 @@ public class DialogueAnimator : MonoBehaviour
                 if(command.commandType != DialogueCommandType.anim_start && command.commandType != DialogueCommandType.anim_end)continue;
                 
                 //There is a command on this spot
-                currentAnimType = command.animationType;
+                if(command.commandType == DialogueCommandType.anim_start){
+                    startIndex = i;
+                    currentAnimType = command.animationType;
+                }
+
+                if(command.commandType == DialogueCommandType.anim_end){
+                    animationRanges.Add(new AnimationRange(
+                        startIndex,
+                        i,
+                        currentAnimType
+                    ));
+                    currentAnimType = TextAnimationType.none;
+                    startIndex = 0;
+                }
             }
-            dialogueAnimPointers.Add(new DialogueCommand(
-                commandType:    DialogueCommandType.anim_start,
-                charIndex:      i,
-                animationType:  currentAnimType
-            ));
         }
     }
 
     private void UpdateTextAnimation(){
         //We want to step through each index of the characters in the dialouge
         //at each 
+        if(textInfo == null)return;
 
-        //Loop through all our pointers and execute all animations.
-        foreach(DialogueCommand animationPointer in dialogueAnimPointers){
-            if(animationPointer.animationType == TextAnimationType.none)continue;
+        //Loop through each character in the dialogue text box
+        for(int i = 0; i < textInfo.characterCount; i++){
+            TMP_CharacterInfo characterInfo = textInfo.characterInfo[i];
+            if(!characterInfo.isVisible)continue;
 
-            PerformTextAnimation(animationPointer);
+            int vertexIndex = characterInfo.vertexIndex;
+            int materialReferenceIndex = characterInfo.materialReferenceIndex;
+
+            Vector3[] sourceVertices = cachedMeshInfo[materialReferenceIndex].vertices;
+            Vector3[] destinationVertices = textInfo.meshInfo[materialReferenceIndex].vertices;
+
+            Vector3 animationPosition = GetAnimationPosition(animationRanges, i, dialogueTextBox.fontSize, Time.unscaledTime);
+            Vector3 offset = (sourceVertices[vertexIndex + 0] + sourceVertices[vertexIndex + 2]) / 2;
+            SetCharacterVerticesPosition(destinationVertices, sourceVertices, animationPosition, offset, vertexIndex);
         }
+        dialogueTextBox.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
+    }
+    private void SetCharacterVerticesPosition(Vector3[] destinationVertices, Vector3[] sourceVertices, Vector3 animationPos, Vector3 offset, int vertexIndex){
+        destinationVertices[vertexIndex + 0] = ((sourceVertices[vertexIndex + 0] - offset)) + offset + animationPos;
+        destinationVertices[vertexIndex + 1] = ((sourceVertices[vertexIndex + 1] - offset)) + offset + animationPos;
+        destinationVertices[vertexIndex + 2] = ((sourceVertices[vertexIndex + 2] - offset)) + offset + animationPos;
+        destinationVertices[vertexIndex + 3] = ((sourceVertices[vertexIndex + 3] - offset)) + offset + animationPos;
     }
 
-    private void PerformTextAnimation(DialogueCommand animationPointer){
-        switch(animationPointer.animationType){
-            case TextAnimationType.wave:
-                PerformWaveAnimation(animationPointer.charIndex);break;
-            case TextAnimationType.shake:
-                PerformShakeAnimation(animationPointer.charIndex);break;
+    #region Text animation position calculations
+
+    private Vector3 GetAnimationPosition(List<AnimationRange> animationRanges, int charIndex, float fontSize, float time){
+        float x = 0;
+        float y = 0;
+
+        foreach(AnimationRange animationRange in animationRanges){
+            if (charIndex >= animationRange.startIndex && charIndex < animationRange.endIndex) {
+                switch(animationRange.animationType){
+                    case TextAnimationType.wave : GetWavePosition(out y, charIndex, fontSize, time);break;
+                    case TextAnimationType.shake: GetShakePosition(out x, out y, charIndex, fontSize, time);break;
+                }
+            }
         }
+        return new Vector3(x, y, 0);
     }
 
-    private void PerformWaveAnimation(int characterIndex){
-
+    private const float WAVE_MAGNITUDE_ADJUSTMENT = 0.06f;
+    private void GetWavePosition(out float y, int charIndex, float fontSize, float time){
+        y = Mathf.Sin((charIndex * 1.5f) + (time * 6)) * fontSize * WAVE_MAGNITUDE_ADJUSTMENT;
     }
 
-    private void PerformShakeAnimation(int characterIndex){
-
+    private const float NOISE_MAGNITUDE_ADJUSTMENT = 0.06f;
+    private const float NOISE_FREQUENCY_ADJUSTMENT = 15f;
+    private void GetShakePosition(out float x, out float y, int charIndex, float fontSize, float time){
+        float scaleAdjust = fontSize * NOISE_MAGNITUDE_ADJUSTMENT;
+        x = (Mathf.PerlinNoise((charIndex + time) * NOISE_FREQUENCY_ADJUSTMENT, 0) - 0.5f) * scaleAdjust;
+        y = (Mathf.PerlinNoise((charIndex + time) * NOISE_FREQUENCY_ADJUSTMENT, 1000) - 0.5f) * scaleAdjust;
     }
+
+    #endregion
 
     #endregion
 

@@ -1,19 +1,34 @@
-[SetSpeakerPlayer] true
+<setPlayerSpeaker:true>
 
 hiya
 
-[SwapSpeaker]
+<swapSpeaker>
 
 hey ho!
 
-[SwapSpeaker]
+<swapSpeaker>
 
 whats cookin'?
 
-[SwapSpeaker]
+<swapSpeaker>
 
 bugs
 
-[SwapSpeaker]
+<swapSpeaker>
 
-sweeeet
+nice
+can I try one?
+
+<swapSpeaker>
+
+what?
+no these aren't for eating
+
+<swapSpeaker>
+
+oh i'm sorry for assuming
+
+<swapSpeaker>
+
+yeah you should never assume
+<anim:wave>mmmmmmmmmmm</anim> they do smell nice though
