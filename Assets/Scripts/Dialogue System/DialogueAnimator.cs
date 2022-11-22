@@ -4,18 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public struct AnimationRange{
-    public int startIndex {get; private set;}
-    public int endIndex {get; private set;}
-    public TextAnimationType animationType {get; private set;}
-
-    public AnimationRange(int startIndex, int endIndex, TextAnimationType animationType){
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
-        this.animationType = animationType;
-    }
-}
-
 public class DialogueAnimator : MonoBehaviour
 {
     private DialogueBrain dialogueBrain;
@@ -27,6 +15,7 @@ public class DialogueAnimator : MonoBehaviour
     private TextEntryAnimationType defaultTextEntryAnimation;
     private float characterAnimationTime;
     private float characterWaitTime;
+    private bool waitForBlankSpace;
 
     #endregion
 
@@ -44,12 +33,6 @@ public class DialogueAnimator : MonoBehaviour
     private AudioSource voiceAudioSource;
     private float voiceMaxPitch;
     private float voiceMinPitch;
-
-    #endregion
-
-    #region Public To Brain
-    
-    public bool animatingText {get; private set;} = false;
 
     #endregion
 
@@ -79,6 +62,7 @@ public class DialogueAnimator : MonoBehaviour
         this.voiceMinPitch = dialogueBrain.voiceMinPitch;
         this.voiceMaxPitch = dialogueBrain.voiceMaxPitch;
 
+        this.waitForBlankSpace = dialogueBrain.waitForBlankSpace;
     }
 
     private void GetTMPObjects(){
@@ -97,7 +81,6 @@ public class DialogueAnimator : MonoBehaviour
     public void ShowText(DialogueComponent nextDialogueComponent){
         currentDialogueComponent = nextDialogueComponent;
 
-        animatingText = true;
         allActiveCoroutines.Clear();
 
         ClearTextBoxMesh();
@@ -119,8 +102,6 @@ public class DialogueAnimator : MonoBehaviour
     }
 
     public void SkipText(){
-        Debug.Log("SKipping text");
-        animatingText = false;
         visibleCharacters = 0;
         totalCharacters = 0;
 
@@ -163,13 +144,35 @@ public class DialogueAnimator : MonoBehaviour
         //Loop through each character in the dialogue
         for(int i = 0; i < textInfo.characterCount; i++){
             TMP_CharacterInfo characterInfo = textInfo.characterInfo[i];
-            if(!characterInfo.isVisible){
-                totalCharacters--; //We dont count invisible characters in our total
-                continue;
-            }
+
+            //waits untill all pausing is done
+            yield return StartCoroutine(ProcessPauseCommands(i));
+
+
+            //Checks for regular commands at index
+
             
-            //Wait untill we can start the animation
-            yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + characterWaitTime);
+            
+            if(waitForBlankSpace){
+                //Wait untill we can start the animation
+                yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + characterWaitTime);
+
+
+                if(!characterInfo.isVisible){
+                    totalCharacters--; //We dont count invisible characters in our total
+                    continue;
+                }
+            } else {
+                if(!characterInfo.isVisible){
+                    totalCharacters--; //We dont count invisible characters in our total
+                    continue;
+                }
+                
+                //Wait untill we can start the animation
+                yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + characterWaitTime);
+            }
+
+            
             
             
             //Perform the animation
@@ -179,7 +182,6 @@ public class DialogueAnimator : MonoBehaviour
         }
         
         
-        animatingText = false;
         yield return null;
     }
 
@@ -195,6 +197,23 @@ public class DialogueAnimator : MonoBehaviour
             SetVertexColours(vertexColors, vertexIndex, originalColor);
         }
         dialogueTextBox.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
+    }
+
+    private IEnumerator ProcessPauseCommands(int currentDialogueIndex){
+
+        //If there is a pause command at this index, wait for it's specified time period
+        foreach(DialogueCommand command in currentDialogueComponent.dialogueCommands){
+            if(command.charIndex != currentDialogueIndex)continue;
+            if(command.commandType != DialogueCommandType.pause)continue;
+
+            //This is a pause command at this index
+            yield return new WaitForSeconds(command.floatValue);
+            break;
+        }
+    }
+
+    private void ProcessOtherCommands(){
+        
     }
 
     #endregion
@@ -217,7 +236,6 @@ public class DialogueAnimator : MonoBehaviour
     }
 
     private void PrepareTextMeshAlpha0(){
-        Debug.Log("Setting alphas to 0");
         for(int i = 0; i < textInfo.characterCount; i ++){
             TMP_CharacterInfo characterInfo = textInfo.characterInfo[i];
             
@@ -435,8 +453,6 @@ public class DialogueAnimator : MonoBehaviour
     }
 
     public bool IsDoneAnimating(){
-        if(animatingText) return false;
-
         if(visibleCharacters < totalCharacters) return false;
 
         return true;
@@ -444,4 +460,18 @@ public class DialogueAnimator : MonoBehaviour
 
     #endregion
 
+}
+
+
+
+public struct AnimationRange{
+    public int startIndex {get; private set;}
+    public int endIndex {get; private set;}
+    public TextAnimationType animationType {get; private set;}
+
+    public AnimationRange(int startIndex, int endIndex, TextAnimationType animationType){
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        this.animationType = animationType;
+    }
 }

@@ -603,7 +603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueList:
-  - {fileID: 4900000, guid: c3c9a6f6041a1a44ab4d3bbc69bc4ac2, type: 3}
+  - {fileID: 4900000, guid: 90eaa164a54b6ea4cadd5b06d67aec62, type: 3}
   <actorSprite>k__BackingField: {fileID: 21300000, guid: e5600378dd761e64d9423790c482bf36,
     type: 3}
   <actorColor>k__BackingField: {r: 0.3012333, g: 0, b: 1, a: 1}
@@ -775,7 +775,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0.00000029802322, y: 10.420002, z: -14.722431}
+  m_LocalPosition: {x: 0.00000035762787, y: 10.420002, z: -14.722431}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1479,7 +1479,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 958404663}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0.00000029802322, y: 10.420002, z: -14.722431}
+  m_LocalPosition: {x: 0.00000035762787, y: 10.420002, z: -14.722431}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2213,8 +2213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueList:
-  - {fileID: 4900000, guid: 90eaa164a54b6ea4cadd5b06d67aec62, type: 3}
-  - {fileID: 4900000, guid: fc6740614bed7fe4ebd3b4de65626250, type: 3}
+  - {fileID: 4900000, guid: 8d08d2147c99cdd4c87ded562a79ea51, type: 3}
   <actorSprite>k__BackingField: {fileID: 21300000, guid: f9161c6c9e06dc445ada3ee16d991f90,
     type: 3}
   <actorColor>k__BackingField: {r: 0, g: 1, b: 0.023376703, a: 1}
@@ -2667,6 +2666,7 @@ MonoBehaviour:
   <defaultTextEntryAnimation>k__BackingField: 2
   <charAnimationTime>k__BackingField: 0.2
   <charWaitTime>k__BackingField: 0.05
+  <waitForBlankSpace>k__BackingField: 1
   titleVar2: 0
   <voiceMinPitch>k__BackingField: 0.9
   <voiceMaxPitch>k__BackingField: 1.1

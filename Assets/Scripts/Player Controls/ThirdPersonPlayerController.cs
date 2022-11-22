@@ -126,7 +126,6 @@ public class ThirdPersonPlayerController : MonoBehaviour
     private void AttemptToInteract(){
         if(!isActive)return;
 
-        Debug.Log("Attempting to interact");
         //Do an overlap sphere to get all objects in the range
         Collider[] hitColliders = Physics.OverlapSphere(interactionCenter + transform.position, interactionRange);
 
@@ -146,10 +145,8 @@ public class ThirdPersonPlayerController : MonoBehaviour
         }
 
         if(closestInteractable == null){
-            Debug.Log("No interactables in range");
             return;
         }
-        Debug.Log("Interacting with : " + closestInteractable);
         //We have an interactable to interact with
         closestInteractable.Interact();
     }

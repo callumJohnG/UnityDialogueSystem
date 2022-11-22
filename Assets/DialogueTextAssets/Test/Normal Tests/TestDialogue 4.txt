@@ -1,4 +1,4 @@
-[SetSpeakerPlayer] true
+<setPlayerSpeaker:true>
 
 hi
 

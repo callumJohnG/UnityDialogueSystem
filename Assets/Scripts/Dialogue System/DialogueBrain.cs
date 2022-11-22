@@ -17,7 +17,9 @@ public enum DialogueCommandType{
     anim_start,
     anim_end,
     setPlayerSpeaker,
-    swapSpeaker
+    swapSpeaker,
+    pause,
+    speed
 }
 
 public enum TextAnimationType{
@@ -72,13 +74,14 @@ public class DialogueBrain : MonoBehaviour
     [field:SerializeField] public TextEntryAnimationType defaultTextEntryAnimation {get; private set;}
     [field:SerializeField] public float charAnimationTime {get; private set;}
     [field:SerializeField] public float charWaitTime {get; private set;}
+    [field:SerializeField] public bool waitForBlankSpace {get; private set;}
 
     [Header("Audio")]
     [SerializeField] private bool titleVar2;
     [field:SerializeField] public float voiceMinPitch {get; private set;} = 1;
     [field:SerializeField] public float voiceMaxPitch {get; private set;} = 1;
 
-    [Header("Global Events (Called on each dialogue")]
+    [Header("Global Events (Called on each dialogue)")]
     [SerializeField] private UnityEvent OnDialogueStart;
     [SerializeField] private UnityEvent OnDialogueEnd;
 
@@ -96,7 +99,6 @@ public class DialogueBrain : MonoBehaviour
     #region Dialogue Brain
 
     public void StartDialogue(DialogueActor actor, TextAsset dialogeText){
-        Debug.Log("Dialoge Starting");
         dialogueActive = true;
         currentActor = actor;
         OnDialogueStart.Invoke();
@@ -119,8 +121,6 @@ public class DialogueBrain : MonoBehaviour
             dialogueAnimator.SkipText();
             return;
         }
-
-        Debug.Log("NEXT DIALOGUE");
 
         //If the current index is higher than the length of our dialogue list, we are done
         if(currentDialogueIndex >= currentDialogue.Count){

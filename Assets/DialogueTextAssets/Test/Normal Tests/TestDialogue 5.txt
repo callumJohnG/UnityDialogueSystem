@@ -1,4 +1,4 @@
-[SetSpeakerPlayer] true
+<setPlayerSpeaker:true>
 
 hello
 
@@ -6,7 +6,7 @@ thisssssssssssssssss issssssssssssssssssssssssssss soooooooooooooooooo longggggg
 
 :)
 
-[SwapSpeaker]
+<swapSpeaker>
 
 ...
 

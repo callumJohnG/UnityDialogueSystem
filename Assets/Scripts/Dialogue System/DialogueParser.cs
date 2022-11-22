@@ -9,10 +9,6 @@ public class DialogueParser
     #region REGEX
 
     private const string REMAINDER_REGEX = "(.*?((?=>)|(/|$)))";
-    //private const string PAUSE_REGEX_STRING = "<p:(?<pause>" + REMAINDER_REGEX + ")>";
-    //private static readonly Regex pauseRegex = new Regex(PAUSE_REGEX_STRING);
-    //private const string SPEED_REGEX_STRING = "<sp:(?<speed>" + REMAINDER_REGEX + ")>";
-    //private static readonly Regex speedRegex = new Regex(SPEED_REGEX_STRING);
     private const string ANIM_START_REGEX_STRING = "<anim:(?<anim>" + REMAINDER_REGEX + ")>";
     private static readonly Regex animStartRegex = new Regex(ANIM_START_REGEX_STRING);
     private const string ANIM_END_REGEX_STRING = "</anim>";
@@ -21,6 +17,10 @@ public class DialogueParser
     private static readonly Regex setSpeakerRegex = new Regex(SET_SPEAKER_REGEX_STRING);
     private const string SWAP_SPEAKER_REGEX_STRING = "<swapSpeaker>";
     private static readonly Regex swapSpeakerRegex = new Regex(SWAP_SPEAKER_REGEX_STRING);
+    private const string PAUSE_REGEX_STRING = "<p:(?<pause>" + REMAINDER_REGEX + ")>";
+    private static readonly Regex pauseRegex = new Regex(PAUSE_REGEX_STRING);
+    private const string SPEED_REGEX_STRING = "<sp:(?<speed>" + REMAINDER_REGEX + ")>";
+    private static readonly Regex speedRegex = new Regex(SPEED_REGEX_STRING);
 
     #endregion
 
@@ -29,8 +29,6 @@ public class DialogueParser
     #region Pre Parsing
 
     public bool PreParseDialogueString(string dialogeString, out List<DialogueCommand> resultCommands){
-        Debug.Log("Pre Parsing, checking for main-line commands");
-
         resultCommands = new List<DialogueCommand>();
         bool boolResult = false;
         List<DialogueCommand> tempCommands;
@@ -63,7 +61,6 @@ public class DialogueParser
         //Get all the matches and loop through them
         MatchCollection speakerMatches = setSpeakerRegex.Matches(dialogeString);
         foreach(Match match in speakerMatches){
-            Debug.Log("Match! at " + match.Index);
 
             //Get the value written in the command
             bool commandInput = match.Groups["bool"].Value == "true";
@@ -88,7 +85,6 @@ public class DialogueParser
         //Get all the matches and loop through them
         MatchCollection speakerMatches = swapSpeakerRegex.Matches(dialogeString);
         foreach(Match match in speakerMatches){
-            Debug.Log("Match! at " + match.Index);
 
             //For each match, make a new command
             resultCommands.Add( new DialogueCommand(
@@ -108,18 +104,14 @@ public class DialogueParser
     #region Main Parsing
 
     public DialogueComponent ParseDialogueString(string dialogeString){
-        Debug.Log("Parsing : " + dialogeString);
         List<DialogueCommand> dialogueCommands = ParseAllRegex(dialogeString, out string processedDialogueString);
-
-        Debug.Log("Finished parsing : " + dialogueCommands.Count);
 
         return new DialogueComponent(processedDialogueString, dialogueCommands);
     }
 
 
     private List<DialogueCommand> ParseAllRegex(string dialogeString, out string processedDialogueString){
-        Debug.Log("Parsing against all regex");
-        
+
         List<DialogueCommand> newCommands = new List<DialogueCommand>();
         List<DialogueCommand> tempCommands = new List<DialogueCommand>();
         processedDialogueString = dialogeString;
@@ -132,22 +124,22 @@ public class DialogueParser
         processedDialogueString = ParseAnimEndRegex(processedDialogueString, out tempCommands);
         newCommands.AddRange(tempCommands);
 
+        //Parse for pause regex
+        processedDialogueString = ParsePauseRegex(processedDialogueString, out tempCommands);
+        newCommands.AddRange(tempCommands);
+
         
         return newCommands;
     }
 
     #region Specific Regex Parsing
 
-    private string ParseAnimStartRegex(string dialogeString, out List<DialogueCommand> newCommands){
-        Debug.Log("Parsing against anim start regex");
-        
+    private string ParseAnimStartRegex(string dialogeString, out List<DialogueCommand> newCommands){        
         newCommands = new List<DialogueCommand>();
-
 
         //Get all the matches and loop through them
         MatchCollection animStartMatches = animStartRegex.Matches(dialogeString);
         foreach(Match match in animStartMatches){
-            Debug.Log("Match! at " + match.Index);
 
             //Get the value written in the command
             string commandInput = match.Groups["anim"].Value;
@@ -164,21 +156,15 @@ public class DialogueParser
         //Remove all the matches from the dialogue string
         dialogeString = Regex.Replace(dialogeString, ANIM_START_REGEX_STRING, "");
 
-        Debug.Log("New dialogue String : " + dialogeString);
-
         return dialogeString;
     }
 
     private string ParseAnimEndRegex(string dialogeString, out List<DialogueCommand> newCommands){
-        Debug.Log("Parsing against anim end regex");
-        
         newCommands = new List<DialogueCommand>();
-
 
         //Get all the matches and loop through them
         MatchCollection animEndMatches = animEndRegex.Matches(dialogeString);
         foreach(Match match in animEndMatches){
-            Debug.Log("Match! at " + match.Index);
 
             //For each match, make a new command
             newCommands.Add(new DialogueCommand(
@@ -190,20 +176,34 @@ public class DialogueParser
         //Remove all the matches from the dialogue string
         dialogeString = Regex.Replace(dialogeString, ANIM_END_REGEX_STRING, "");
 
-        Debug.Log("New dialogue String : " + dialogeString);
+        return dialogeString;
+    }
+
+    private string ParsePauseRegex(string dialogeString, out List<DialogueCommand> newCommands){
+        newCommands = new List<DialogueCommand>();
+
+        //Get all the matches and loop through them
+        MatchCollection pauseMatches = pauseRegex.Matches(dialogeString);
+        foreach(Match match in pauseMatches){
+
+            //Get the value written in the command
+            float commandInput = float.Parse(match.Groups["pause"].Value);
+
+            //For each match, make a new command
+            newCommands.Add(new DialogueCommand(
+                commandType:    DialogueCommandType.pause,
+                charIndex:      GetRealPositionInString(dialogeString, match.Index),
+                floatValue:     commandInput
+            ));
+        }
+
+        //Remove all the matches from the dialogue string
+        dialogeString = Regex.Replace(dialogeString, PAUSE_REGEX_STRING, "");
 
         return dialogeString;
     }
 
     #endregion
-
-    //PLAN
-
-    //Take in the dialogue string
-    //Run regex matching for each specific command on it
-    //Generate all dialogue commands for them
-    //Remove all regex from the string
-    //Return new dialogue component with new string and all commands
 
     #region Helpers
 
