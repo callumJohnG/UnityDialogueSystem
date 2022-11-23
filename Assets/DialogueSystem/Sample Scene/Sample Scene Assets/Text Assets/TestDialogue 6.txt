@@ -1,0 +1,8 @@
+<setPlayerSpeaker:false>
+
+<speed:rapid><anim:shake><b>HELLO<p:short> HELLO<p:short> HELLO</anim></b>
+<speed:rapid><anim:shake><b>HIIIIIIIII</anim></b><speed:slow><p:long> I'm ralf
+
+<swapSpeaker>
+
+<i>this guy smells like <anim:wave>cheese</anim></i>

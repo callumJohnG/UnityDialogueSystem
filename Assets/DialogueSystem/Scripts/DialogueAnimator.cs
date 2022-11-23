@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class DialogueAnimator : MonoBehaviour
 {
@@ -13,9 +14,10 @@ public class DialogueAnimator : MonoBehaviour
     #region From Brain
     private TextMeshProUGUI dialogueTextBox;
     private TextEntryAnimationType defaultTextEntryAnimation;
-    private float characterAnimationTime;
-    private float characterWaitTime;
+    private float charAnimationTime;
+    private float charWaitTime;
     private bool waitForBlankSpace;
+    private UnityEvent OnCharacterSwap;
 
     #endregion
 
@@ -56,13 +58,23 @@ public class DialogueAnimator : MonoBehaviour
 
         defaultTextEntryAnimation = dialogueBrain.defaultTextEntryAnimation;
 
-        this.characterAnimationTime = dialogueBrain.charAnimationTime;
-        this.characterWaitTime = dialogueBrain.charWaitTime;
+        this.charAnimationTime = dialogueBrain.charAnimationTime;
+        this.charWaitTime = dialogueBrain.defaultCharSpeed;
 
         this.voiceMinPitch = dialogueBrain.voiceMinPitch;
         this.voiceMaxPitch = dialogueBrain.voiceMaxPitch;
 
         this.waitForBlankSpace = dialogueBrain.waitForBlankSpace;
+
+        this.OnCharacterSwap = dialogueBrain.OnSpeakerSwap;
+    }
+
+    public void SetCharSpeed(float waitTime){
+        this.charWaitTime = waitTime;
+    }
+
+    private void ResetCharSpeed(){
+        this.charWaitTime = dialogueBrain.defaultCharSpeed;
     }
 
     private void GetTMPObjects(){
@@ -76,7 +88,6 @@ public class DialogueAnimator : MonoBehaviour
     #endregion
 
     #region Main Animation Functions (Show Text / Skip Text)
-
 
     public void ShowText(DialogueComponent nextDialogueComponent){
         currentDialogueComponent = nextDialogueComponent;
@@ -139,7 +150,7 @@ public class DialogueAnimator : MonoBehaviour
         totalCharacters = textInfo.characterCount;
         visibleCharacters = 0;
 
-        float timeOfCharacterAnim = Time.time - characterWaitTime;
+        float timeOfCharacterAnim = Time.time - charWaitTime;
 
         //Loop through each character in the dialogue
         for(int i = 0; i < textInfo.characterCount; i++){
@@ -150,12 +161,12 @@ public class DialogueAnimator : MonoBehaviour
 
 
             //Checks for regular commands at index
-
+            ProcessOtherCommands(i);
             
             
             if(waitForBlankSpace){
                 //Wait untill we can start the animation
-                yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + characterWaitTime);
+                yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + charWaitTime);
 
 
                 if(!characterInfo.isVisible){
@@ -169,7 +180,7 @@ public class DialogueAnimator : MonoBehaviour
                 }
                 
                 //Wait untill we can start the animation
-                yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + characterWaitTime);
+                yield return new WaitUntil(() => Time.time >= timeOfCharacterAnim + charWaitTime);
             }
 
             
@@ -181,7 +192,9 @@ public class DialogueAnimator : MonoBehaviour
             PlayVoiceAudio();
         }
         
-        
+        //Reset the speed after all the text is in
+        ResetCharSpeed();
+
         yield return null;
     }
 
@@ -212,8 +225,15 @@ public class DialogueAnimator : MonoBehaviour
         }
     }
 
-    private void ProcessOtherCommands(){
-        
+    private void ProcessOtherCommands(int currentDialogueIndex){
+        foreach(DialogueCommand command in currentDialogueComponent.dialogueCommands){
+            if(command.charIndex != currentDialogueIndex)continue;
+
+
+            if(command.commandType == DialogueCommandType.speed){
+                SetCharSpeed(command.floatValue);
+            }
+        }
     }
 
     #endregion
@@ -289,7 +309,7 @@ public class DialogueAnimator : MonoBehaviour
     private IEnumerator CharacterAnimationFadeIn(TMP_CharacterInfo characterInfo){
         float currentTime = 0;
 
-        while(currentTime < characterAnimationTime){
+        while(currentTime < charAnimationTime){
 
             //Perform an animation step
             //Lerp the colour of the vertex
@@ -299,7 +319,7 @@ public class DialogueAnimator : MonoBehaviour
             Color32[] vertexColors = textInfo.meshInfo[meshIndex].colors32;
             Color32 currentColor = vertexColors[vertexIndex];
             Color32 endColor = originalColors[meshIndex][vertexIndex];
-            Color32 lerpColor = Color32.Lerp(currentColor, endColor, currentTime / characterAnimationTime);
+            Color32 lerpColor = Color32.Lerp(currentColor, endColor, currentTime / charAnimationTime);
             SetVertexColours(vertexColors, vertexIndex, lerpColor);
 
 

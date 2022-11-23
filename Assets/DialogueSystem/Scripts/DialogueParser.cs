@@ -6,7 +6,7 @@ using UnityEngine;
 public class DialogueParser
 {
 
-    #region REGEX
+    #region REGEX and Dictionaries
 
     private const string REMAINDER_REGEX = "(.*?((?=>)|(/|$)))";
     private const string ANIM_START_REGEX_STRING = "<anim:(?<anim>" + REMAINDER_REGEX + ")>";
@@ -17,10 +17,26 @@ public class DialogueParser
     private static readonly Regex setSpeakerRegex = new Regex(SET_SPEAKER_REGEX_STRING);
     private const string SWAP_SPEAKER_REGEX_STRING = "<swapSpeaker>";
     private static readonly Regex swapSpeakerRegex = new Regex(SWAP_SPEAKER_REGEX_STRING);
-    private const string PAUSE_REGEX_STRING = "<p:(?<pause>" + REMAINDER_REGEX + ")>";
+    private const string PAUSE_REGEX_STRING = "<((p)|(pause)):(?<pause>" + REMAINDER_REGEX + ")>";
     private static readonly Regex pauseRegex = new Regex(PAUSE_REGEX_STRING);
-    private const string SPEED_REGEX_STRING = "<sp:(?<speed>" + REMAINDER_REGEX + ")>";
+    private const string SPEED_REGEX_STRING = "<((sp)|(speed)):(?<speed>" + REMAINDER_REGEX + ")>";
     private static readonly Regex speedRegex = new Regex(SPEED_REGEX_STRING);
+
+    private static readonly Dictionary<string, float> pauseDictionary = new Dictionary<string, float>{
+        { "tiny", .1f },
+        { "short", .25f },
+        { "normal", 0.666f },
+        { "long", 1f },
+        { "read", 2f },
+    };
+
+    private static readonly Dictionary<string, float> speedDictionary = new Dictionary<string, float>{
+        { "rapid", 0.01f },
+        { "fast", .05f },
+        { "normal", .07f },
+        { "slow", 0.1f },
+        { "snail", 0.15f },
+    };
 
     #endregion
 
@@ -128,6 +144,12 @@ public class DialogueParser
         processedDialogueString = ParsePauseRegex(processedDialogueString, out tempCommands);
         newCommands.AddRange(tempCommands);
 
+        //Parse for speed regex
+        processedDialogueString = ParseSpeedRegex(processedDialogueString, out tempCommands);
+        newCommands.AddRange(tempCommands);
+
+
+
         
         return newCommands;
     }
@@ -187,18 +209,65 @@ public class DialogueParser
         foreach(Match match in pauseMatches){
 
             //Get the value written in the command
-            float commandInput = float.Parse(match.Groups["pause"].Value);
+            float floatValue;
+            string stringInput = match.Groups["pause"].Value;
+            if(pauseDictionary.ContainsKey(stringInput)){
+                floatValue = pauseDictionary[stringInput];
+            } else {
+                try{
+                    floatValue = float.Parse(stringInput);
+                } catch {
+                    floatValue = pauseDictionary["normal"];   
+                }
+            }
+            
 
             //For each match, make a new command
             newCommands.Add(new DialogueCommand(
                 commandType:    DialogueCommandType.pause,
                 charIndex:      GetRealPositionInString(dialogeString, match.Index),
-                floatValue:     commandInput
+                floatValue:     floatValue
             ));
         }
 
         //Remove all the matches from the dialogue string
         dialogeString = Regex.Replace(dialogeString, PAUSE_REGEX_STRING, "");
+
+        return dialogeString;
+    }
+
+
+    private string ParseSpeedRegex(string dialogeString, out List<DialogueCommand> newCommands){
+        newCommands = new List<DialogueCommand>();
+
+        //Get all the matches and loop through them
+        MatchCollection speedMatches = speedRegex.Matches(dialogeString);
+        foreach(Match match in speedMatches){
+
+            //Get the value written in the command
+            float floatValue;
+            string stringInput = match.Groups["speed"].Value;
+            if(speedDictionary.ContainsKey(stringInput)){
+                floatValue = speedDictionary[stringInput];
+            } else {
+                try{
+                    floatValue = float.Parse(stringInput);
+                } catch {
+                    floatValue = speedDictionary["normal"];   
+                }
+            }
+            
+
+            //For each match, make a new command
+            newCommands.Add(new DialogueCommand(
+                commandType:    DialogueCommandType.speed,
+                charIndex:      GetRealPositionInString(dialogeString, match.Index),
+                floatValue:     floatValue
+            ));
+        }
+
+        //Remove all the matches from the dialogue string
+        dialogeString = Regex.Replace(dialogeString, SPEED_REGEX_STRING, "");
 
         return dialogeString;
     }

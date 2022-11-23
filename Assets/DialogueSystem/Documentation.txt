@@ -1,4 +1,14 @@
-                                [MAIN FUNCTIONS] - They go on a line with no dialogue
+===========================================================================
+                        Documentation for custom dialogue system
+                        by Callum Gillespie
+===========================================================================
+
+
+
+-----Main Line Commands
+        Have to go on a line void of dialogue.
+        Used to process commands in between dialogue.
+
 
 Swap speaker    Use <setPlayerSpeaker:bool> to directly set the player/NPC as the speaker.
                         <setPlayerSpeaker:true>         sets player as the speaker.
@@ -18,9 +28,9 @@ Swap speaker    Use <setPlayerSpeaker:bool> to directly set the player/NPC as th
 
 
 
-
-
-                                [In-Line FUNCTIONS] - They go in between text
+-----In-Line Commands
+        Used in dialogue lines.
+        Used to alter the apearance of dialogue.
 
 
         TMP RICH TEXT TAGS
@@ -44,4 +54,20 @@ Color 	                Use <color=red> to set the color to red. Several other co
         CUSTOM TEXT TAGS
         ----------------
 
-Animation               Use <anim:animName> and </anim>.
+Animation               Use <anim:string animName> and </anim>.
+Pause                   Use <pause:int pauseSeconds>. waits here for pauseSeconds seconds.
+                        (can also use <p>)
+                                Alternatively, use one of these values in place of int pauseSeconds:
+                                "tiny"  :0.1f
+                                "short" :0.25f
+                                "normal":0.666f
+                                "long"  :1f
+                                "read"  :2f
+Speed Change            Use <speed:int newSpeed>. Changes the time between each character being displayed.
+                        (can also use <sp>)
+                                Alternatively, use one of these values in place of int newSpeed:
+                                "rapid" :0.01f
+                                "fast"  :0.03f
+                                "normal":0.07f
+                                "slow"  :0.1f
+                                "snail" :0.15f

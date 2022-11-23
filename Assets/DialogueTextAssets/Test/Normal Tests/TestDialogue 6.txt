@@ -1,3 +1,0 @@
-<setPlayerSpeaker:true>
-
-<p:4>h<p:1>i

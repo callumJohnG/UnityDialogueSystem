@@ -1,0 +1,25 @@
+<setPlayerSpeaker:false>
+
+<speed:rapid><anim:shake><b>YAAAAAAAAASSSSSS</b></anim>
+
+<swapSpeaker>
+
+...
+
+are you ok?
+
+<swapSpeaker>
+
+huh?
+
+oh yeah I just do that sometimes
+
+<sp:slow><anim:wave><i>ohmmmmmmm</i></anim>
+
+<sp:slow>...
+
+please leave now
+
+<swapSpeaker>
+
+bruh
