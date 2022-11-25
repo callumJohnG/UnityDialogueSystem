@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThirdPersonPlayerController : MonoBehaviour
+public class DialogueSampleThirdPersonPlayerController : MonoBehaviour
 {
 
     [SerializeField] private Rigidbody rb;
 
 
-    private PlayerControls controls;
+    private DialogueSamplePlayerControls controls;
 
 
     // Start is called before the first frame update
@@ -26,7 +26,7 @@ public class ThirdPersonPlayerController : MonoBehaviour
     }
 
     private void ConfigureControlListeners(){
-        controls = new PlayerControls();
+        controls = new DialogueSamplePlayerControls();
 
         //Horizontal 3d Movement (Left/Right)
         controls.Player.HorizontalMovement.performed += ctx => horizontalMovement = ctx.ReadValue<float>();
@@ -130,7 +130,7 @@ public class ThirdPersonPlayerController : MonoBehaviour
         Collider[] hitColliders = Physics.OverlapSphere(interactionCenter + transform.position, interactionRange);
 
 
-        Interactable closestInteractable = null;
+        DialogueSampleInteractable closestInteractable = null;
         float closestDistance = Mathf.Infinity;
         
         foreach(Collider collider in hitColliders){
@@ -140,7 +140,7 @@ public class ThirdPersonPlayerController : MonoBehaviour
             if(distance >= closestDistance)continue;
 
             //Found a new closest interactable
-            closestInteractable = collider.GetComponent<Interactable>();
+            closestInteractable = collider.GetComponent<DialogueSampleInteractable>();
             closestDistance = distance;
         }
 

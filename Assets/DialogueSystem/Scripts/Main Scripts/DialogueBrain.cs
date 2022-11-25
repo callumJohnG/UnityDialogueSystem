@@ -158,7 +158,6 @@ public class DialogueBrain : MonoBehaviour
     }
 
     private void EndDialogue(){
-        Debug.Log("Ending Dialogue");
         dialogueActive = false;
 
         dialogueTextContainer.SetActive(false);
@@ -192,7 +191,6 @@ public class DialogueBrain : MonoBehaviour
     private bool playerSpeaking = false;
 
     private void SwapSpeaker(){
-        Debug.Log("SWAPPING SPEAKER");
         SwapSpeaker(!playerSpeaking);
     }
 

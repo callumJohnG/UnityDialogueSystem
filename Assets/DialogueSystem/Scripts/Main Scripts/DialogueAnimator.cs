@@ -120,6 +120,7 @@ public class DialogueAnimator : MonoBehaviour
 
         ShowAllCharacters();
 
+        ResetCharSpeed();
     }
 
     private void CacheMeshInfo(){

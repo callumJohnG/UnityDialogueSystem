@@ -21,10 +21,10 @@ public class DialogueInputController : MonoBehaviour
     }
 
     private DialogueBrain dialogueBrain;
-    private PlayerControls controls;
+    private DialogueSamplePlayerControls controls;
 
     private void ConfigureControlListeners(){
-        controls = new PlayerControls();
+        controls = new DialogueSamplePlayerControls();
 
         controls.Dialogue.ProgressDialogue.performed += _ => NextDialogue();
     }

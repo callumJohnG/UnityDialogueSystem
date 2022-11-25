@@ -404,7 +404,7 @@ GameObject:
   - component: {fileID: 206265045}
   - component: {fileID: 206265044}
   - component: {fileID: 206265049}
-  - component: {fileID: 206265048}
+  - component: {fileID: 206265050}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -492,24 +492,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &206265048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 206265043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 355ed57480fe3784ca579460f26b75b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 206265049}
-  movementSpeed: 2
-  interactionRange: 2.98
-  interactionCenter: {x: 0, y: 0, z: 0}
-  visualsContainer: {fileID: 1560431801}
-  visualsRotateSpeed: 5
 --- !u!54 &206265049
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -526,6 +508,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &206265050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206265043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 355ed57480fe3784ca579460f26b75b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 206265049}
+  movementSpeed: 2
+  interactionRange: 5
+  interactionCenter: {x: 0, y: 0, z: 0}
+  visualsContainer: {fileID: 1560431801}
+  visualsRotateSpeed: 4
 --- !u!1 &212980390
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,7 +776,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0.00000029802322, y: 10.420002, z: -14.722431}
+  m_LocalPosition: {x: 0.00000035762787, y: 10.420002, z: -14.722431}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1387,7 +1387,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5844cb20f167bc045b062f11ee84b637, type: 2}
+  - {fileID: 2100000, guid: b938638e80692b349867b91c4be5a595, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1480,7 +1480,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 958404663}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0.00000029802322, y: 10.420002, z: -14.722431}
+  m_LocalPosition: {x: 0.00000035762787, y: 10.420002, z: -14.722431}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2944,8 +2944,8 @@ MonoBehaviour:
   OnDialogueStart:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 206265048}
-        m_TargetAssemblyTypeName: ThirdPersonPlayerController, Assembly-CSharp
+      - m_Target: {fileID: 206265050}
+        m_TargetAssemblyTypeName: DialogueSampleThirdPersonPlayerController, Assembly-CSharp
         m_MethodName: Deactivate
         m_Mode: 1
         m_Arguments:
@@ -2959,8 +2959,8 @@ MonoBehaviour:
   OnDialogueEnd:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 206265048}
-        m_TargetAssemblyTypeName: ThirdPersonPlayerController, Assembly-CSharp
+      - m_Target: {fileID: 206265050}
+        m_TargetAssemblyTypeName: DialogueSampleThirdPersonPlayerController, Assembly-CSharp
         m_MethodName: Activate
         m_Mode: 1
         m_Arguments:
