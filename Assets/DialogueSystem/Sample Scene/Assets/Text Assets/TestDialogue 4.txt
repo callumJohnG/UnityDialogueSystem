@@ -1,11 +1,7 @@
 <setPlayerSpeaker:true>
 
-hi
+<sound:4><sfx:51>Hello!
 
-this is
+<anim:wave><event:0><e:13>Weeeee!</anim>
 
-a good test
-
-well
-
-goodbye
+Bye!

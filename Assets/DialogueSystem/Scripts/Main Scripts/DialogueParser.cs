@@ -21,6 +21,10 @@ public class DialogueParser
     private static readonly Regex pauseRegex = new Regex(PAUSE_REGEX_STRING);
     private const string SPEED_REGEX_STRING = "<((sp)|(speed)):(?<speed>" + REMAINDER_REGEX + ")>";
     private static readonly Regex speedRegex = new Regex(SPEED_REGEX_STRING);
+    private const string SOUND_REGEX_STRING = "<((sfx)|(sound)):(?<sound>" + REMAINDER_REGEX + ")>";
+    private static readonly Regex soundRegex = new Regex(SOUND_REGEX_STRING);
+    private const string EVENT_REGEX_STRING = "<((e)|(event)):(?<event>" + REMAINDER_REGEX + ")>";
+    private static readonly Regex eventRegex = new Regex(EVENT_REGEX_STRING);
 
     private static readonly Dictionary<string, float> pauseDictionary = new Dictionary<string, float>{
         { "tiny", .1f },
@@ -148,6 +152,14 @@ public class DialogueParser
         processedDialogueString = ParseSpeedRegex(processedDialogueString, out tempCommands);
         newCommands.AddRange(tempCommands);
 
+        //Parse for sound regex
+        processedDialogueString = ParseSoundRegex(processedDialogueString, out tempCommands);
+        newCommands.AddRange(tempCommands);
+
+        //Parse for event regex
+        processedDialogueString = ParseEventRegex(processedDialogueString, out tempCommands);
+        newCommands.AddRange(tempCommands);
+
 
 
         
@@ -268,6 +280,69 @@ public class DialogueParser
 
         //Remove all the matches from the dialogue string
         dialogeString = Regex.Replace(dialogeString, SPEED_REGEX_STRING, "");
+
+        return dialogeString;
+    }
+
+
+    private string ParseSoundRegex(string dialogeString, out List<DialogueCommand> newCommands){
+        newCommands = new List<DialogueCommand>();
+
+        //Get all the matches and loop through them
+        MatchCollection soundMatches = soundRegex.Matches(dialogeString);
+        foreach(Match match in soundMatches){
+
+            //Get the value written in the command
+            int intValue;
+            string stringInput = match.Groups["sound"].Value;
+            try{
+                intValue = int.Parse(stringInput);
+            } catch {
+                intValue = 0;
+            }
+            
+
+            //For each match, make a new command
+            newCommands.Add(new DialogueCommand(
+                commandType:    DialogueCommandType.sound,
+                charIndex:      GetRealPositionInString(dialogeString, match.Index),
+                intValue:       intValue
+            ));
+        }
+
+        //Remove all the matches from the dialogue string
+        dialogeString = Regex.Replace(dialogeString, SOUND_REGEX_STRING, "");
+
+        return dialogeString;
+    }
+
+    private string ParseEventRegex(string dialogeString, out List<DialogueCommand> newCommands){
+        newCommands = new List<DialogueCommand>();
+
+        //Get all the matches and loop through them
+        MatchCollection eventMatches = eventRegex.Matches(dialogeString);
+        foreach(Match match in eventMatches){
+
+            //Get the value written in the command
+            int intValue;
+            string stringInput = match.Groups["event"].Value;
+            try{
+                intValue = int.Parse(stringInput);
+            } catch {
+                intValue = 0;
+            }
+            
+
+            //For each match, make a new command
+            newCommands.Add(new DialogueCommand(
+                commandType:    DialogueCommandType.dialogueEvent,
+                charIndex:      GetRealPositionInString(dialogeString, match.Index),
+                intValue:       intValue
+            ));
+        }
+
+        //Remove all the matches from the dialogue string
+        dialogeString = Regex.Replace(dialogeString, EVENT_REGEX_STRING, "");
 
         return dialogeString;
     }

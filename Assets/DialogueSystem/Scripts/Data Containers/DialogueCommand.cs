@@ -9,6 +9,8 @@ public struct DialogueCommand
     public TextAnimationType animationType  {get; private set;}
     public bool boolValue                   {get; private set;}
     public float floatValue                 {get; private set;}
+    public int intValue                     {get; private set;}
+    public string stringValue               {get; private set;}
 
 
 
@@ -17,12 +19,16 @@ public struct DialogueCommand
                             int                 charIndex = 0,
                             TextAnimationType   animationType = TextAnimationType.none,
                             bool                boolValue = false,
-                            float               floatValue = 0)
+                            float               floatValue = 0,
+                            int                 intValue = 0,
+                            string              stringValue = "")
     {
         this.commandType = commandType;
         this.charIndex = charIndex;
         this.animationType = animationType;
         this.boolValue = boolValue;
         this.floatValue = floatValue;
+        this.intValue = intValue;
+        this.stringValue = stringValue;
     }
 }

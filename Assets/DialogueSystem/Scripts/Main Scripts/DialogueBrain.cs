@@ -19,7 +19,9 @@ public enum DialogueCommandType{
     setPlayerSpeaker,
     swapSpeaker,
     pause,
-    speed
+    speed,
+    sound,
+    dialogueEvent
 }
 
 public enum TextAnimationType{

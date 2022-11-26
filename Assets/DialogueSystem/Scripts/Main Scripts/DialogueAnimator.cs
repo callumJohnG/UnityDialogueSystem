@@ -234,7 +234,27 @@ public class DialogueAnimator : MonoBehaviour
             if(command.commandType == DialogueCommandType.speed){
                 SetCharSpeed(command.floatValue);
             }
+
+            if(command.commandType == DialogueCommandType.dialogueEvent){
+                ProcessDialogueEventCommand(command.intValue);
+            }
+
+            if(command.commandType == DialogueCommandType.sound){
+                ProcessSoundCommand(command.intValue);
+            }
         }
+    }
+
+    #endregion
+
+    #region CommandProcessing
+
+    private void ProcessDialogueEventCommand(int eventID){
+        Debug.Log("EVENT:" + eventID);
+    }
+
+    private void ProcessSoundCommand(int soundID){
+        Debug.Log("SOUND:" + soundID);
     }
 
     #endregion

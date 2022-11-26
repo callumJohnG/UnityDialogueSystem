@@ -14,16 +14,15 @@ Swap speaker    Use <setPlayerSpeaker:bool> to directly set the player/NPC as th
                         <setPlayerSpeaker:true>         sets player as the speaker.
                         <setPlayerSpeaker:false>        sets NPC as the speaker.
                         <swapSpeaker>                   swaps the current speaker.
+Sound effect    Use <sound:int soundID>. Plays the sound clip with that ID.
+                        Sound clips are stored on the respecive dialogue actors / dialogue brain (for player)
+                        ID is the same as the Index of that sound in the sound clip list.
+                        (can also use <sfx>)
+Event           Use <event:int eventID>. Invokes the event with that ID.
+                        Events are stored on the respecive dialogue actors / dialogue brain (for player)
+                        ID is the same as the Index of that event in the event list.
+                        (can also use <e>)
 
-
-
-
-//NOT ADDED YET
-[PlaySound] int soundIndex
-//Plays a sound effect from the Dialogue actors list of sounds
-
-[PlayAnimation] string animationName
-//Plays an animation on the dialogue actors Animator using the crossfade function
 
 
 ------------------------------------

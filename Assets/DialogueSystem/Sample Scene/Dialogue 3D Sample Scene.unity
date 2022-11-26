@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -606,7 +606,8 @@ MonoBehaviour:
   dialogueList:
   - {fileID: 4900000, guid: c3c9a6f6041a1a44ab4d3bbc69bc4ac2, type: 3}
   repeatLastDialouge: 1
-  <actorSprite>k__BackingField: {fileID: 21300000, guid: e5600378dd761e64d9423790c482bf36, type: 3}
+  <actorSprite>k__BackingField: {fileID: 21300000, guid: e5600378dd761e64d9423790c482bf36,
+    type: 3}
   <actorColor>k__BackingField: {r: 0.3012333, g: 0, b: 1, a: 1}
   <actorName>k__BackingField: Dingle-Ton
   <actorVoice>k__BackingField:
@@ -1750,9 +1751,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueList:
-  - {fileID: 4900000, guid: 921abf412584c7d4595da7914146958f, type: 3}
+  - {fileID: 4900000, guid: f676acc9db43d854cb63b762947f8152, type: 3}
   repeatLastDialouge: 0
-  <actorSprite>k__BackingField: {fileID: 21300000, guid: 02800fb9cff14da47a04572790384d8b, type: 3}
+  <actorSprite>k__BackingField: {fileID: 21300000, guid: 02800fb9cff14da47a04572790384d8b,
+    type: 3}
   <actorColor>k__BackingField: {r: 1, g: 0.058790363, b: 0, a: 1}
   <actorName>k__BackingField: Scrunlie
   <actorVoice>k__BackingField:
@@ -1985,7 +1987,8 @@ MonoBehaviour:
   dialogueList:
   - {fileID: 4900000, guid: 8d08d2147c99cdd4c87ded562a79ea51, type: 3}
   repeatLastDialouge: 1
-  <actorSprite>k__BackingField: {fileID: 21300000, guid: 92b8c447daf4d4b41a0ec148d1091261, type: 3}
+  <actorSprite>k__BackingField: {fileID: 21300000, guid: 92b8c447daf4d4b41a0ec148d1091261,
+    type: 3}
   <actorColor>k__BackingField: {r: 0.6603774, g: 0.6551369, b: 0.21493416, a: 1}
   <actorName>k__BackingField: Ralf
   <actorVoice>k__BackingField:
@@ -2388,7 +2391,8 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 90eaa164a54b6ea4cadd5b06d67aec62, type: 3}
   - {fileID: 4900000, guid: fc6740614bed7fe4ebd3b4de65626250, type: 3}
   repeatLastDialouge: 1
-  <actorSprite>k__BackingField: {fileID: 21300000, guid: f9161c6c9e06dc445ada3ee16d991f90, type: 3}
+  <actorSprite>k__BackingField: {fileID: 21300000, guid: f9161c6c9e06dc445ada3ee16d991f90,
+    type: 3}
   <actorColor>k__BackingField: {r: 0, g: 1, b: 0.023376703, a: 1}
   <actorName>k__BackingField: Borgus
   <actorVoice>k__BackingField:
