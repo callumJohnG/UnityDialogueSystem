@@ -3,11 +3,11 @@
                         by Callum Gillespie
 ===========================================================================
 
-
-
------Main Line Commands
-        Have to go on a line void of dialogue.
-        Used to process commands in between dialogue.
+------------------------------------
+        MAIN LINE COMMANDS
+------------------------------------
+        -Have to go on a line void of dialogue.
+        -Used to process commands in between dialogue.
 
 
 Swap speaker    Use <setPlayerSpeaker:bool> to directly set the player/NPC as the speaker.
@@ -26,15 +26,15 @@ Swap speaker    Use <setPlayerSpeaker:bool> to directly set the player/NPC as th
 //Plays an animation on the dialogue actors Animator using the crossfade function
 
 
+------------------------------------
+        IN-LINE COMMANDS
+------------------------------------
+        -Used in dialogue lines.
+        -Used to alter the apearance of dialogue.
 
 
------In-Line Commands
-        Used in dialogue lines.
-        Used to alter the apearance of dialogue.
 
-
-        TMP RICH TEXT TAGS
-        ------------------
+    >TMP Rich Text Tags<
 Bold                    Use <b> and </b>.
 Italics 	        Use <i> and </i>.
 Underline 	        Use <u> and </u>.
@@ -51,8 +51,7 @@ Color 	                Use <color=red> to set the color to red. Several other co
                                 <#FF8000> or any other hexadecimal code to define a color.
                                 </color> to end the color tag.
 
-        CUSTOM TEXT TAGS
-        ----------------
+    >Custom Text Tags<
 
 Animation               Use <anim:string animName> and </anim>.
 Pause                   Use <pause:int pauseSeconds>. waits here for pauseSeconds seconds.

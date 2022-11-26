@@ -1,0 +1,35 @@
+===========================================================================
+                        Custom Dialogue System
+                        by Callum Gillespie
+===========================================================================
+Created in Unity 2021.3.13f
+=========[REQUIRED/SUGGESTED PACKAGES]==========
+New Input System
+URP
+
+
+
+=========[How to set up]==========
+>Place the dialogue brain prefab in the scene (from the prefabs folder) (make sure there is only one brain in the scene).
+>Assign the required text components to the dialogue brain in the inspector.
+>Assign the player's (main character's) name, image, voice, and colour here (name and image are optional)
+>Create a button input to call "NextDialogue()" on the brain in order for the text to progress properly.
+        Button input should be the same as the input used to initiate dialogue.
+        This is because as the player starts a dialogue (with the button) it should then immediately call NextDialogue().
+        This will be improved on and fixed an a future update.
+
+>Place the "dialogue actor" script onto any object you wish to be an actor.
+>Assign that characters name, image, voice and colour in the inspector (name and image are optional)
+>Create dialogue text assets for the character and assign them in the editor
+        See the Documentation for tag explanations
+        For examples on how to use the tags, see the example text assets in the "sample scene/assets/text assets" folder.
+
+
+=========[How to use]==========
+>To start a dialogue, call the "StartDialogue()" method on the actor.
+        The dialogue will start using the next text asset in the dialouge actors list of dialogues.
+        If all the dialouges have been used, the last one in the list will be repeated by default.
+                If the actors "repeatLastDialogue" is unchecked, then when dialouge runs out they will no longer be interactable (untill more dialouge is added)
+>To progress the dialogue, call the "NextDialogue()" method on the brain.
+        This is NOT automatically called when "StartDialogue()" is called, so a brain input system is needed.
+        "NextDialogue()" only proceeds when a dialogue in on-going.
