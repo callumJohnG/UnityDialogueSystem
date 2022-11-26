@@ -8,32 +8,29 @@
 ------------------------------------
         -Have to go on a line void of dialogue.
         -Used to process commands in between dialogue.
+        -(Note, these must be put on a line void of dialogue / inline commands)
+        -(This is enforced since swapping character mid-sentance is not possible)
 
 
 Swap speaker    Use <setPlayerSpeaker:bool> to directly set the player/NPC as the speaker.
                         <setPlayerSpeaker:true>         sets player as the speaker.
                         <setPlayerSpeaker:false>        sets NPC as the speaker.
                         <swapSpeaker>                   swaps the current speaker.
-Sound effect    Use <sound:int soundID>. Plays the sound clip with that ID.
-                        Sound clips are stored on the respecive dialogue actors / dialogue brain (for player)
-                        ID is the same as the Index of that sound in the sound clip list.
-                        (can also use <sfx>)
-Event           Use <event:int eventID>. Invokes the event with that ID.
-                        Events are stored on the respecive dialogue actors / dialogue brain (for player)
-                        ID is the same as the Index of that event in the event list.
-                        (can also use <e>)
 
 
 
 ------------------------------------
         IN-LINE COMMANDS
 ------------------------------------
-        -Used in dialogue lines.
+        -Can be used in dialogue lines.
         -Used to alter the apearance of dialogue.
+        -(Note, if used outside of dialouge lines, will be ignored if they rely on text)
+        -(eg, <anim> is ignored but <event> is not)
 
 
 
     >TMP Rich Text Tags<
+
 Bold                    Use <b> and </b>.
 Italics 	        Use <i> and </i>.
 Underline 	        Use <u> and </u>.
@@ -53,7 +50,10 @@ Color 	                Use <color=red> to set the color to red. Several other co
     >Custom Text Tags<
 
 Animation               Use <anim:string animName> and </anim>.
-Pause                   Use <pause:int pauseSeconds>. waits here for pauseSeconds seconds.
+                        The text between these tags is animated based on the animName
+                                "wave"  :Text moves in a sin wave pattern
+                                "shake" :Text shakes/jitters
+Pause                   Use <pause:float pauseSeconds>. waits here for pauseSeconds seconds.
                         (can also use <p>)
                                 Alternatively, use one of these values in place of int pauseSeconds:
                                 "tiny"  :0.1f
@@ -69,3 +69,10 @@ Speed Change            Use <speed:int newSpeed>. Changes the time between each 
                                 "normal":0.07f
                                 "slow"  :0.1f
                                 "snail" :0.15f
+Sound effect            Use <sound:int soundID>. Plays the sound clip with that ID (index).
+                        (can also use <sfx>)
+                                Sound clips are stored in the dialogue brain and are the same for all actors.
+                                ID is the same as the Index of that sound in the sound clip list.   
+Event                   Use <event:int eventID>. Invokes the event with that ID.
+                        (can also use <e>)
+                                Events are stored on the "Dialogue Events" script on the actor (required component), and are unique to each actor.

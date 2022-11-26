@@ -1,7 +1,7 @@
-<setPlayerSpeaker:true>
+<setPlayerSpeaker:false>
 
-<sound:4><sfx:51>Hello!
+<sound:0>Hi! I can change colour,<p:short> want to see?
 
-<anim:wave><event:0><e:13>Weeeee!</anim>
+<e:0><anim:wave>Weeeeeeeeee!</anim><event:1>
 
 Bye!

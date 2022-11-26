@@ -23,7 +23,11 @@ URP
 >Create dialogue text assets for the character and assign them in the editor
         See the Documentation for tag explanations
         For examples on how to use the tags, see the example text assets in the "sample scene/assets/text assets" folder.
-
+>Create unity events inside the "Dialouge Events" class
+        This class is required by Dialogue Actor, so will always appear on the same object as the DialogueActor script
+        Unity cannot show a list of Events in the inspector, which is why this seperate class with a custom editor is needed
+        Create the events in this class with unique ID's, and they will be invoked when an <event> command is called by this actor during dialogue
+        NOTE : If two events have the same ID, the first will be called. If none have the ID, none are called.
 
 =========[How to use]==========
 >To start a dialogue, call the "StartDialogue()" method on the actor.

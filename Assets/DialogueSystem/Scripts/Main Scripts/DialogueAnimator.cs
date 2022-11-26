@@ -52,7 +52,7 @@ public class DialogueAnimator : MonoBehaviour
 
     private void GetVariablesFromBrain(){
         dialogueBrain = GetComponent<DialogueBrain>();
-        voiceAudioSource = GetComponent<AudioSource>();
+        voiceAudioSource = dialogueBrain.voiceAudioSource;
 
         dialogueTextBox = dialogueBrain.dialogueTextBox;
 
@@ -113,6 +113,8 @@ public class DialogueAnimator : MonoBehaviour
     }
 
     public void SkipText(){
+        ProcessAllRemainingCommands();
+
         visibleCharacters = 0;
         totalCharacters = 0;
 
@@ -221,6 +223,7 @@ public class DialogueAnimator : MonoBehaviour
             if(command.commandType != DialogueCommandType.pause)continue;
 
             //This is a pause command at this index
+            command.SetProcessed();
             yield return new WaitForSeconds(command.floatValue);
             break;
         }
@@ -232,14 +235,17 @@ public class DialogueAnimator : MonoBehaviour
 
 
             if(command.commandType == DialogueCommandType.speed){
+                command.SetProcessed();
                 SetCharSpeed(command.floatValue);
             }
 
             if(command.commandType == DialogueCommandType.dialogueEvent){
+                command.SetProcessed();
                 ProcessDialogueEventCommand(command.intValue);
             }
 
             if(command.commandType == DialogueCommandType.sound){
+                command.SetProcessed();
                 ProcessSoundCommand(command.intValue);
             }
         }
@@ -249,12 +255,27 @@ public class DialogueAnimator : MonoBehaviour
 
     #region CommandProcessing
 
+    //Called when the dialogue is skipped, any important commands that havent been called yet need to be called
+    private void ProcessAllRemainingCommands(){
+        foreach(DialogueCommand command in currentDialogueComponent.dialogueCommands){
+            if(command.processed) continue;
+
+            //this command was not processed yet
+            if(command.commandType == DialogueCommandType.dialogueEvent){
+                command.SetProcessed();
+                ProcessDialogueEventCommand(command.intValue);
+            }
+
+            //Put all commands here that need to be called if they are skipped
+        }
+    }
+
     private void ProcessDialogueEventCommand(int eventID){
-        Debug.Log("EVENT:" + eventID);
+        dialogueBrain.InvokeDialogueEvent(eventID);
     }
 
     private void ProcessSoundCommand(int soundID){
-        Debug.Log("SOUND:" + soundID);
+        dialogueBrain.PlayDialogueSoundEffect(soundID);
     }
 
     #endregion

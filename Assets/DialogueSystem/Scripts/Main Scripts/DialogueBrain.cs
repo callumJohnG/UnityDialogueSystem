@@ -5,34 +5,7 @@ using TMPro;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-#region Enums
-
-public enum TextEntryAnimationType{
-    scaleUp,
-    fadeIn,
-    appear
-}
-
-public enum DialogueCommandType{
-    anim_start,
-    anim_end,
-    setPlayerSpeaker,
-    swapSpeaker,
-    pause,
-    speed,
-    sound,
-    dialogueEvent
-}
-
-public enum TextAnimationType{
-    none,
-    wave,
-    shake,
-}
-
-#endregion
-
-[RequireComponent(typeof(DialogueAnimator), typeof(AudioSource))]
+[RequireComponent(typeof(DialogueAnimator))]
 public class DialogueBrain : MonoBehaviour
 {
 
@@ -79,14 +52,19 @@ public class DialogueBrain : MonoBehaviour
     [field:SerializeField] public bool waitForBlankSpace {get; private set;}
 
     [Header("Audio")]
-    [SerializeField] private bool titleVar2;
+    [SerializeField] private List<AudioClip> dialogueSoundEffects;
     [field:SerializeField] public float voiceMinPitch {get; private set;} = 1;
     [field:SerializeField] public float voiceMaxPitch {get; private set;} = 1;
+    [field:SerializeField] public AudioSource voiceAudioSource {get; private set;}
+    [field:SerializeField] public AudioSource dialogueSFXAudioSource {get; private set;}
 
-    [Header("Global Events (Called on each dialogue)")]
+    [Header("Events")]
     [SerializeField] private UnityEvent OnDialogueStart;
     [SerializeField] private UnityEvent OnDialogueEnd;
     [field:SerializeField] public UnityEvent OnSpeakerSwap {get;private set;}
+    //[field:SerializeField] public List<UnityEvent> DialogueEvents {get; private set;}
+    //public List<UnityEvent> DialogueEvents;
+    //[SerializeField] private DialogueEvents dialogueEvents;
 
     #endregion
 
@@ -155,8 +133,17 @@ public class DialogueBrain : MonoBehaviour
         DialogueComponent nextDialogueComponent = parser.ParseDialogueString(nextDialogueString);
         //Set the speaker voice and pass into the animator
         nextDialogueComponent.SetSpeakerVoice(currentSpeakerVoice);
+
+
+        //If the new processed dialogue string has no visible characters (ie - is empty)
+        //Then we dont want to display them, instead we process all/any commands on that line
+        //And then go to next dialogue
+        if(CheckDialogueStringIsEmpty(nextDialogueComponent)){
+            ProcessAllInLineCommands(nextDialogueComponent);
+            NextDialogue();
+            return;
+        }
         dialogueAnimator.ShowText(nextDialogueComponent);
-        
     }
 
     private void EndDialogue(){
@@ -172,7 +159,22 @@ public class DialogueBrain : MonoBehaviour
 
     #endregion
 
-    #region Dialogue Processing
+    #region Command Processing
+
+    //Only called when the dialogue string is empty
+    //Processes all in-line commands that dont rely on text (since there is no text in the string) if any are present
+    private void ProcessAllInLineCommands(DialogueComponent component){
+        foreach(DialogueCommand command in component.dialogueCommands){
+            switch(command.commandType){
+                case DialogueCommandType.sound :
+                    PlayDialogueSoundEffect(command.intValue);
+                    break;
+                case DialogueCommandType.dialogueEvent :
+                    InvokeDialogueEvent(command.intValue);
+                    break;
+            }
+        }
+    }
 
     private void ExecuteMainCommand(DialogueCommand command){
         switch(command.commandType){
@@ -227,6 +229,28 @@ public class DialogueBrain : MonoBehaviour
         currentSpeakerVoice = speakerVoice;
     }
 
+    public void PlayDialogueSoundEffect(int soundID){
+        AudioClip sound;
+        try{
+            sound = dialogueSoundEffects[soundID];
+        } catch {
+            Debug.Log("soundID (index) not in list");
+            return;
+        }
+
+        dialogueSFXAudioSource.PlayOneShot(sound);
+    }
+
+    public void InvokeDialogueEvent(int eventID){
+        foreach(DialogueEvent eventObject in currentActor.dialogueEvents.dialogueEvents){
+            if(eventObject.eventID != eventID) continue;
+
+            //This event has the right index, Invoke it!
+            eventObject._event.Invoke();
+            return;
+        }
+    }
+
     #endregion
 
     #region Helpers
@@ -256,6 +280,37 @@ public class DialogueBrain : MonoBehaviour
         return newSplitDialogue;
     }
 
+    private bool CheckDialogueStringIsEmpty(DialogueComponent component){
+        return string.IsNullOrWhiteSpace(component.dialogueString);
+    }
+
     #endregion
 
 }
+
+#region Enums
+
+public enum TextEntryAnimationType{
+    scaleUp,
+    fadeIn,
+    appear
+}
+
+public enum DialogueCommandType{
+    anim_start,
+    anim_end,
+    setPlayerSpeaker,
+    swapSpeaker,
+    pause,
+    speed,
+    sound,
+    dialogueEvent
+}
+
+public enum TextAnimationType{
+    none,
+    wave,
+    shake,
+}
+
+#endregion

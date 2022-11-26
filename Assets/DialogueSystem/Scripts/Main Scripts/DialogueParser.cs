@@ -124,6 +124,7 @@ public class DialogueParser
     #region Main Parsing
 
     public DialogueComponent ParseDialogueString(string dialogeString){
+        dialogeString += "\n";//Ensures that commands at the very end of the dialouge are called
         List<DialogueCommand> dialogueCommands = ParseAllRegex(dialogeString, out string processedDialogueString);
 
         return new DialogueComponent(processedDialogueString, dialogueCommands);

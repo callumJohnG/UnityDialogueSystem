@@ -11,6 +11,7 @@ public struct DialogueCommand
     public float floatValue                 {get; private set;}
     public int intValue                     {get; private set;}
     public string stringValue               {get; private set;}
+    public bool processed                   {get; private set;}
 
 
 
@@ -30,5 +31,11 @@ public struct DialogueCommand
         this.floatValue = floatValue;
         this.intValue = intValue;
         this.stringValue = stringValue;
+
+        processed = false;
+    }
+
+    public void SetProcessed(){
+        processed = true;
     }
 }

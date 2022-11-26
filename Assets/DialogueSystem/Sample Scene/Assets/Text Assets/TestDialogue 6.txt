@@ -5,4 +5,6 @@
 
 <swapSpeaker>
 
-<speed:snail><i>this guy smells like <anim:wave>cheese</anim></i>
+<e:0>
+
+<speed:slow><i>this guy smells like <anim:wave>cheese</anim></i><e:1>

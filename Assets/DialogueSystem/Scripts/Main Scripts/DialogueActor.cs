@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(DialogueEvents))]
 public class DialogueActor : MonoBehaviour
 {
 
@@ -13,12 +14,16 @@ public class DialogueActor : MonoBehaviour
     [field:SerializeField] public Color actorColor {get; private set;}
     [field:SerializeField] public string actorName {get; private set;}
     [field:SerializeField] public List<AudioClip> actorVoice {get; private set;}
+    public DialogueEvents dialogueEvents {get; private set;}
 
     private int dialogueIndex = 0;
 
     [SerializeField] private UnityEvent OnDialogueStart;
     [SerializeField] private UnityEvent OnDialogueEnd;
 
+    private void Awake(){
+        dialogueEvents = GetComponent<DialogueEvents>();
+    }
 
     public void StartDialogue(){
         //If we have run out of dialouge, then keep repeating the last dialogue if repeatLastDialogue is true
