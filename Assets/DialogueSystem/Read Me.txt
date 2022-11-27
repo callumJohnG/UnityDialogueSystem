@@ -12,19 +12,29 @@ Created in Unity 2021.3.13f
 New Input System
 URP
 
+=========[Samle Scene]==========
+For demonstration purposes, there is a sample scene included in this package.
+The scene incudes a simple 3rd person character controller, and a few NPC's to talk to who demonstrate the various options
+available in this dialogue system.
+
+Controls:
+        WASD - Walk
+        Mouse0 (left click) - Interact/Next Dialogue
+
+
 
 
 =========[How to set up]==========
 >Place the dialogue brain prefab in the scene (from the prefabs folder) (make sure there is only one brain in the scene).
 >Assign the required text components to the dialogue brain in the inspector.
->Assign the player's (main character's) name, image, voice, and colour here (name and image are optional)
+>Assign the player's (main character's) name, image, voice, and text colour here (name and image are optional)
 >Create a button input to call "NextDialogue()" on the brain in order for the text to progress properly.
         Button input should be the same as the input used to initiate dialogue.
         This is because as the player starts a dialogue (with the button) it should then immediately call NextDialogue().
-        This will be improved on and fixed an a future update.
+        This will be improved on and fixed in a future update.
 
 >Place the "dialogue actor" script onto any object you wish to be an actor.
->Assign that characters name, image, voice and colour in the inspector (name and image are optional)
+>Assign that characters name, image, voice and text colour in the inspector (name and image are optional)
 >Create dialogue text assets for the character and assign them in the editor
         See the Documentation for tag explanations
         For examples on how to use the tags, see the example text assets in the "sample scene/assets/text assets" folder.
