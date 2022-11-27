@@ -2,6 +2,11 @@
                         Custom Dialogue System
                         by Callum Gillespie
 ===========================================================================
+Read this for information on how to set up this custom dialogue system in a unity project.
+This system is capable of handling all major aspects that you would expect from a dialouge system
+including custom text tags, text animation and running code (with unity events) at specific points in dialouge.
+(Currently no support for branching choice for the player, perhaps in a future update)
+
 Created in Unity 2021.3.13f
 =========[REQUIRED/SUGGESTED PACKAGES]==========
 New Input System
