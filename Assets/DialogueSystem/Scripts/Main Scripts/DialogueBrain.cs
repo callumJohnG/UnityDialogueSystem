@@ -43,6 +43,7 @@ public class DialogueBrain : MonoBehaviour
     [field:SerializeField] public TextMeshProUGUI dialogueTextBox {get; private set;}
     [field:SerializeField] public TextMeshProUGUI speakerNameTextBox {get; private set;}
     [SerializeField] private Image speakerImage;
+    [SerializeField] private GameObject buttonPromptContainer;
 
     [Header("Animation")]
     [SerializeField] private bool titleVar1;
@@ -62,9 +63,7 @@ public class DialogueBrain : MonoBehaviour
     [SerializeField] private UnityEvent OnDialogueStart;
     [SerializeField] private UnityEvent OnDialogueEnd;
     [field:SerializeField] public UnityEvent OnSpeakerSwap {get;private set;}
-    //[field:SerializeField] public List<UnityEvent> DialogueEvents {get; private set;}
-    //public List<UnityEvent> DialogueEvents;
-    //[SerializeField] private DialogueEvents dialogueEvents;
+
 
     #endregion
 
@@ -86,6 +85,8 @@ public class DialogueBrain : MonoBehaviour
         OnDialogueStart.Invoke();
 
         dialogueTextContainer.SetActive(true);
+        
+        ShowButtonPrompt(false);
 
         currentDialogue = FilterDialogue(dialogeText.text);
 
@@ -93,11 +94,14 @@ public class DialogueBrain : MonoBehaviour
 
         //DebugDialogue(currentDialogue);
 
-        //Dont need to call "NextDialogue()" here because it gets called by the input system (controls) when the player clicks to start the dialogue
+        NextDialogue();
     }
 
     public void NextDialogue(){
         if(!dialogueActive)return;
+
+        //At the start of each dialogue, turn off the button prompt
+        ShowButtonPrompt(false);
 
         if(!dialogueAnimator.IsDoneAnimating()){
             dialogueAnimator.SkipText();
@@ -144,6 +148,12 @@ public class DialogueBrain : MonoBehaviour
             return;
         }
         dialogueAnimator.ShowText(nextDialogueComponent);
+    }
+
+    public void ShowButtonPrompt(bool active){
+        if(buttonPromptContainer == null) return;
+
+        buttonPromptContainer.SetActive(active);
     }
 
     private void EndDialogue(){

@@ -1,5 +1,5 @@
 {
-    "name": "Player Controls",
+    "name": "DialogueSample Player Controls",
     "maps": [
         {
             "name": "Player",
@@ -207,19 +207,8 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "669fff2c-4630-4e8d-8b29-ee6fa2d1e501",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ProgressDialogue",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e0ea606d-f364-42cb-a8de-50f911967697",
-                    "path": "<Mouse>/leftButton",
+                    "id": "4f750d3e-9f75-4135-a1cb-fb55ea781d80",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

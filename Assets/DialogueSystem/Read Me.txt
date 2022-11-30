@@ -26,12 +26,13 @@ Controls:
 
 =========[How to set up]==========
 >Place the dialogue brain prefab in the scene (from the prefabs folder) (make sure there is only one brain in the scene).
->Assign the required text components to the dialogue brain in the inspector.
+>Assign the required text UI components to the dialogue brain in the inspector.
 >Assign the player's (main character's) name, image, voice, and text colour here (name and image are optional)
 >Create a button input to call "NextDialogue()" on the brain in order for the text to progress properly.
-        Button input should be the same as the input used to initiate dialogue.
-        This is because as the player starts a dialogue (with the button) it should then immediately call NextDialogue().
-        This will be improved on and fixed in a future update.
+        Button input should NOT be the same as the input used to initiate dialogue.
+        This is because as the player starts a dialogue (with the button) it should not then immediately call NextDialogue().
+        (This is due to a race condition present if both systems call "NextDialogue()" at almost the same time)
+        (Support for the same input will be added in the future)
 
 >Place the "dialogue actor" script onto any object you wish to be an actor.
 >Assign that characters name, image, voice and text colour in the inspector (name and image are optional)

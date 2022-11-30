@@ -123,6 +123,8 @@ public class DialogueAnimator : MonoBehaviour
         ShowAllCharacters();
 
         ResetCharSpeed();
+
+        OnDoneAnimating();
     }
 
     private void CacheMeshInfo(){
@@ -197,6 +199,8 @@ public class DialogueAnimator : MonoBehaviour
         
         //Reset the speed after all the text is in
         ResetCharSpeed();
+
+        OnDoneAnimating();
 
         yield return null;
     }
@@ -518,6 +522,10 @@ public class DialogueAnimator : MonoBehaviour
         if(visibleCharacters < totalCharacters) return false;
 
         return true;
+    }
+
+    private void OnDoneAnimating(){
+        dialogueBrain.ShowButtonPrompt(true);
     }
 
     #endregion
