@@ -54,44 +54,23 @@ MonoBehaviour:
   <dialogueTextBox>k__BackingField: {fileID: 0}
   <speakerNameTextBox>k__BackingField: {fileID: 0}
   speakerImage: {fileID: 0}
+  buttonPromptContainer: {fileID: 0}
   titleVar1: 0
   <defaultTextEntryAnimation>k__BackingField: 2
   <charAnimationTime>k__BackingField: 0.2
   <defaultCharSpeed>k__BackingField: 0.07
   <waitForBlankSpace>k__BackingField: 0
-  titleVar2: 0
+  dialogueSoundEffects: []
   <voiceMinPitch>k__BackingField: 0.9
   <voiceMaxPitch>k__BackingField: 1.1
+  <voiceAudioSource>k__BackingField: {fileID: 0}
+  <dialogueSFXAudioSource>k__BackingField: {fileID: 0}
   OnDialogueStart:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThirdPersonPlayerController, Assembly-CSharp
-        m_MethodName: Deactivate
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   OnDialogueEnd:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ThirdPersonPlayerController, Assembly-CSharp
-        m_MethodName: Activate
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   <OnSpeakerSwap>k__BackingField:
     m_PersistentCalls:
       m_Calls: []

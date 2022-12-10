@@ -13,7 +13,7 @@ public class DialogueBrain : MonoBehaviour
 
     private void Awake(){
         Instance = this;
-    }
+    } 
 
     private void Start(){
         GetDialogueComponents();
@@ -70,10 +70,16 @@ public class DialogueBrain : MonoBehaviour
     #region Private Variables
 
     private List<AudioClip> currentSpeakerVoice;
-    public DialogueActor currentActor {get;private set;}
     private List<string> currentDialogue;
     private int currentDialogueIndex = 0;
     private bool dialogueActive = false;
+
+    #endregion
+
+    #region Public Variables
+
+    public bool playerSpeaking {get; private set;} = false;
+    public DialogueActor currentActor {get;private set;}
 
     #endregion
 
@@ -200,9 +206,6 @@ public class DialogueBrain : MonoBehaviour
     private void SetDefaultDialogueSettings(){
         SwapSpeaker(false);
     }
-
-
-    private bool playerSpeaking = false;
 
     private void SwapSpeaker(){
         SwapSpeaker(!playerSpeaking);
