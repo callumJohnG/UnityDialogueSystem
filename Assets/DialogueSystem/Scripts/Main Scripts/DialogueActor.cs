@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 [RequireComponent(typeof(DialogueEvents))]
 public class DialogueActor : MonoBehaviour
@@ -14,6 +15,7 @@ public class DialogueActor : MonoBehaviour
     [field:SerializeField] public Color actorColor {get; private set;}
     [field:SerializeField] public string actorName {get; private set;}
     [field:SerializeField] public List<AudioClip> actorVoice {get; private set;}
+    [field:SerializeField] public TMP_FontAsset actorFont {get; private set;}
     public DialogueEvents dialogueEvents {get; private set;}
 
     private int dialogueIndex = 0;

@@ -13,12 +13,3 @@ who...<p:short> am I?
 ...
 
 <b><anim:wave>BORGUS!</anim></b>
-
-<swapSpeaker>
-
-...
-<sub>please dont shout at me</sub>
-
-<swapSpeaker>
-
-<b><anim:shake>FUCK YOU!!!</anim></b>

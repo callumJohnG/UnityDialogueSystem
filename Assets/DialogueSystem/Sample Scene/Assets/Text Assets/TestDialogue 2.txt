@@ -1,9 +1,9 @@
 <setPlayerSpeaker:false>
 
-didnt i tell you....
+oh...<p:short>ummm
 
-<anim:shake><b>FUCK OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!</b></anim>
+<i><anim:wave>i didnt think you'd speak to me again</i></anim>
 
 <swapSpeaker>
 
-AHHHHH!
+oh<pause:short> sorry

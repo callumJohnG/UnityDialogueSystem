@@ -256,7 +256,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -16.5319, y: -15.98}
+  m_AnchoredPosition: {x: -16.531921, y: -15.98}
   m_SizeDelta: {x: -140.2781, y: -31.961}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &24033532
@@ -613,6 +613,7 @@ MonoBehaviour:
   <actorName>k__BackingField: Dingle-Ton
   <actorVoice>k__BackingField:
   - {fileID: 8300000, guid: 614d0496a39c52242b943c14ef63dd9c, type: 3}
+  <actorFont>k__BackingField: {fileID: 0}
   OnDialogueStart:
     m_PersistentCalls:
       m_Calls: []
@@ -2036,6 +2037,7 @@ MonoBehaviour:
   <actorColor>k__BackingField: {r: 1, g: 0.058790363, b: 0, a: 1}
   <actorName>k__BackingField: Scrunlie
   <actorVoice>k__BackingField: []
+  <actorFont>k__BackingField: {fileID: 0}
   OnDialogueStart:
     m_PersistentCalls:
       m_Calls: []
@@ -2318,6 +2320,7 @@ MonoBehaviour:
   <actorName>k__BackingField: Ralf
   <actorVoice>k__BackingField:
   - {fileID: 8300000, guid: 1ce3a885a1b0a134d932ee915f4284e7, type: 3}
+  <actorFont>k__BackingField: {fileID: 0}
   OnDialogueStart:
     m_PersistentCalls:
       m_Calls: []
@@ -2806,6 +2809,7 @@ MonoBehaviour:
   <actorName>k__BackingField: Borgus
   <actorVoice>k__BackingField:
   - {fileID: 8300000, guid: 6ffcfc1ab817de24a931f75b27fe642f, type: 3}
+  <actorFont>k__BackingField: {fileID: 0}
   OnDialogueStart:
     m_PersistentCalls:
       m_Calls: []
@@ -3218,7 +3222,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -16.213173, y: 31.661}
+  m_AnchoredPosition: {x: -16.213196, y: 31.661}
   m_SizeDelta: {x: -139.6406, y: -63.322}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2018702611
@@ -3355,11 +3359,13 @@ MonoBehaviour:
   playerName: Patrick
   playerVoice:
   - {fileID: 8300000, guid: 1ce3a885a1b0a134d932ee915f4284e7, type: 3}
+  playerFont: {fileID: 0}
   dialogueTextContainer: {fileID: 1720776279}
   <dialogueTextBox>k__BackingField: {fileID: 24033532}
   <speakerNameTextBox>k__BackingField: {fileID: 2018702611}
   speakerImage: {fileID: 805207740}
   buttonPromptContainer: {fileID: 1584840958}
+  defaultFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   titleVar1: 0
   <defaultTextEntryAnimation>k__BackingField: 2
   <charAnimationTime>k__BackingField: 0.2

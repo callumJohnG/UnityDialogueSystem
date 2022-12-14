@@ -37,6 +37,7 @@ public class DialogueBrain : MonoBehaviour
     [SerializeField] private Color playerColor;
     [SerializeField] private string playerName;
     [SerializeField] private List<AudioClip> playerVoice;
+    [SerializeField] private TMP_FontAsset playerFont;
 
     [Header("Dialogue Animation / UI")]
     [SerializeField] private GameObject dialogueTextContainer;
@@ -44,6 +45,7 @@ public class DialogueBrain : MonoBehaviour
     [field:SerializeField] public TextMeshProUGUI speakerNameTextBox {get; private set;}
     [SerializeField] private Image speakerImage;
     [SerializeField] private GameObject buttonPromptContainer;
+    [SerializeField] private TMP_FontAsset defaultFont;
 
     [Header("Animation")]
     [SerializeField] private bool titleVar1;
@@ -219,25 +221,45 @@ public class DialogueBrain : MonoBehaviour
                 playerSprite,
                 playerColor,
                 playerName,
-                playerVoice);
+                playerVoice,
+                playerFont);
         } else {
             SetSpeakerVariables(
                 currentActor.actorSprite,
                 currentActor.actorColor,
                 currentActor.actorName,
-                currentActor.actorVoice);
+                currentActor.actorVoice,
+                currentActor.actorFont);
         }
         OnSpeakerSwap.Invoke();
     }
 
-    private void SetSpeakerVariables(Sprite speakerSprite, Color textColor, string speakerName, List<AudioClip> speakerVoice){
+    private void SetSpeakerVariables(
+        Sprite speakerSprite,
+        Color textColor,
+        string speakerName,
+        List<AudioClip> speakerVoice,
+        TMP_FontAsset speakerFont)
+    {
+        
         try{speakerImage.sprite = speakerSprite;}catch{}
         try{
             speakerNameTextBox.text = speakerName;
             speakerNameTextBox.color = textColor;
         }catch{}
-
+        
         dialogueTextBox.color = textColor;
+
+        //Set the font
+        if(speakerFont == null){
+            if(defaultFont == null){
+                Debug.LogError("No default font assigned in brain, unable to change font");
+            } else {
+                dialogueTextBox.font = defaultFont;
+            }
+        } else {
+            dialogueTextBox.font = speakerFont;
+        }
 
         currentSpeakerVoice = speakerVoice;
     }
