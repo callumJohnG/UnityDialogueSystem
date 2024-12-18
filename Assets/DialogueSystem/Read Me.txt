@@ -12,7 +12,7 @@ Created in Unity 2021.3.13f
 New Input System
 URP
 
-=========[Samle Scene]==========
+=========[Sample Scene]==========
 For demonstration purposes, there is a sample scene included in this package.
 The scene incudes a simple 3rd person character controller, and a few NPC's to talk to who demonstrate the various options
 available in this dialogue system.
