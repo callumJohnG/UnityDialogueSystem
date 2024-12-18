@@ -49,7 +49,7 @@ Controls:
 >To start a dialogue, call the "StartDialogue()" method on the actor.
         The dialogue will start using the next text asset in the dialouge actors list of dialogues.
         If all the dialouges have been used, the last one in the list will be repeated by default.
-                If the actors "repeatLastDialogue" is unchecked, then when dialouge runs out they will no longer be interactable (untill more dialouge is added)
+                If the actors "repeatLastDialogue" is unchecked, then when dialouge runs out they will no longer be interactable (until more dialouge is added)
 >To progress the dialogue, call the "NextDialogue()" method on the brain.
         This is NOT automatically called when "StartDialogue()" is called, so a brain input system is needed.
         "NextDialogue()" only proceeds when a dialogue in on-going.
